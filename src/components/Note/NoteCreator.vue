@@ -1,6 +1,6 @@
 
 <template>
-    <q-dialog full-width full-height v-model="show">
+    <q-dialog full-width full-height v-model="showDialog">
         <q-card>
             <div class="tw-mx-2 tw-px-2">
 
@@ -29,19 +29,20 @@
 <script>
 
 export default {
-    props: ['show'],
+
     data: function () {
         return {
             title: '',
             text: '',
             tags: '',
+            showDialog: false,
         }
     },
 
-
     methods: {
         onSave () {
-            console.log('Save')
+            console.log('NoteCreator - Save')
+            
             const newNote = {
                 // id: Math.round(Math.random() * 10000),
                 title: this.title,
@@ -50,12 +51,30 @@ export default {
                 created: Date.now(),
                 state: 'active'
             }
+            console.log(newNote)
             this.$emit('save', newNote)
         },
         onCancel () {
             console.log('NoteEditor - Cancel')
             this.$emit('cancel')
-        }
+        },
+
+        show () {
+            this._reset()
+            this.showDialog = true
+        },
+
+        _reset () {
+            this.title = ''
+            this.text = ''
+            this.tags = []
+        },
+
+        hide () {
+            this.showDialog = false
+        },
+
+
     }
 }
 </script>

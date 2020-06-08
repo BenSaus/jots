@@ -14,10 +14,14 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="left" side="left" >
+    <q-drawer 
+        show-if-above 
+        v-model="left" 
+        side="left" 
+    >
       <q-list v-for="(menuItem, index) in menuList" :key="index">
 
-        <q-item clickable :active="menuItem.label === 'Notes'" v-ripple :to="menuItem.path">
+        <q-item clickable exact v-ripple :to="menuItem.path">
           <q-item-section avatar>
             <q-icon :name="menuItem.icon" />
           </q-item-section>
