@@ -1,27 +1,35 @@
 <template>
-    <!-- <q-dialog v-model="showDialog"> -->
         <q-card>
-            <div class="tw-mx-2 tw-px-2">
+            <div class="">
 
-                <div class="column">
-                    <div class="row justify-between">
-                        <p class="tw-text-xl tw-mt-3">New Note</p>
-                        <q-btn icon="close" flat color="primary" v-close-popup @click="onCancel" />
-                    </div>
-                    <div>
-                        <q-input outlined v-model="title" label="Title" />
-                        <q-input class="tw-pt-3" v-model="text" outlined label="Text" type="textarea"/>
-                        <q-input class="tw-mt-3" outlined v-model="tags" label="Tags" />
-                    </div>
-                </div>
+                <form @submit.prevent="onSubmit">
 
-                <q-card-actions align="right">
-                    <q-btn flat color="primary" label="Save" @click="onSave" />
-                </q-card-actions>
+                    <q-card-section class="">
+                        <div class="row justify-between">
+                            <p class="tw-text-xl tw-mt-3">New Note</p>
+                            <q-btn icon="close" flat color="primary" v-close-popup @click="onCancel" />
+                        </div>
+                        <div>
+                            <q-input 
+                                ref="titleInput"
+                                outlined 
+                                v-model="title" 
+                                label="Title" 
+                                :rules="[val => !!val || 'Title is required']"
+                            />
+                            <q-input class="tw-mt-3" v-model="text" outlined label="Text" type="textarea"/>
+                            <q-input class="tw-mt-3" outlined v-model="tags" label="Tags" />
+                        </div>
+                    </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn color="primary" label="Save" type="submit" />
+                    </q-card-actions>
+                    
+                </form>
+
             </div>
-
         </q-card>
-    <!-- </q-dialog> -->
 </template>
 
 <script>
@@ -34,7 +42,6 @@ export default {
             title: '',
             text: '',
             tags: '',
-            // showDialog: false,
         }
     },
     created () {
@@ -47,9 +54,16 @@ export default {
     methods: {
         ...mapActions('notes', ['createNote']),
 
-        onSave () {
-            console.log('NoteCreator - Save')
+        onSubmit () {
+            console.log('NoteCreator - Submit')
+
+            this.$refs.titleInput.validate()
+            if (this.$refs.titleInput.hasError) return null
             
+            this.createNewNote()
+        },
+
+        createNewNote () {
             const newNote = {
                 title: this.title,
                 text: this.text,
@@ -60,37 +74,19 @@ export default {
 
             console.log(newNote)
             this.createNote(newNote)
-
-            this.$emit('save')
+            this.$emit('close')
         },
+
         onCancel () {
             console.log('NoteEditor - Cancel')
-            this.$emit('cancel')
+            this.$emit('close')
         },
-
-        // show () {
-        //     this._reset()
-        //     this.showDialog = true
-        // },
-
-        // _reset () {
-        //     this.title = ''
-        //     this.text = ''
-        //     this.tags = []
-        // },
-
-        // hide () {
-        //     this.showDialog = false
-        // },
     }
 }
 </script>
 
 <style lang="css" scoped>
-    .noteDetails__text {
-        min-height: 600px;
-        margin-top: auto;
-    }
+
 </style>
 
 

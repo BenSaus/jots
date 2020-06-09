@@ -6,11 +6,11 @@
         </div>
 
         <q-dialog full-width full-height v-model="showEditNoteDialog">
-            <NoteEditor ref="noteEditor" :noteId="noteIdToEdit" @cancel="onNoteEditorCancel" @save="onNoteEditorSave"> </NoteEditor>
+            <NoteEditor ref="noteEditor" :noteId="noteIdToEdit" @close="showEditNoteDialog = false" > </NoteEditor>
         </q-dialog>
 
-        <q-dialog v-model="showCreateNoteDialog">
-            <NoteCreator ref="noteCreator" @cancel="onNoteCreatorCancel" @save="onNoteCreatorSave"> </NoteCreator>
+        <q-dialog full-width full-height v-model="showCreateNoteDialog">
+            <NoteCreator ref="noteCreator" @close="showCreateNoteDialog = false"> </NoteCreator>
         </q-dialog>
 
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -54,30 +54,12 @@ export default {
     methods: {
 
         onNoteClick (note) {
-            // this.$refs.noteEditor.show(note.id)
             this.noteIdToEdit = note.id
             this.showEditNoteDialog = true
         },
-        onNoteEditorSave () {
-            // this.$refs.noteEditor.hide()
-            this.showEditNoteDialog = false
-        },
-        onNoteEditorCancel () {
-            // this.$refs.noteEditor.hide()
-            this.showEditNoteDialog = false
-        },
 
         onAddClick () {
-            // this.$refs.noteCreator.show()
             this.showCreateNoteDialog = true
-        },
-        onNoteCreatorSave () {
-            // this.$refs.noteCreator.hide()
-            this.showCreateNoteDialog = false
-        },
-        onNoteCreatorCancel () {
-            // this.$refs.noteCreator.hide()
-            this.showCreateNoteDialog = false
         },
 
     },
