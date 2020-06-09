@@ -1,5 +1,5 @@
 <template>
-    <q-dialog full-width full-height v-model="showDialog">
+    <!-- <q-dialog full-width full-height v-model="showDialog"> -->
         <q-card>
             <div class="tw-mx-2 tw-px-2">
 
@@ -20,13 +20,16 @@
             </div>
 
         </q-card>
-    </q-dialog>
+    <!-- </q-dialog> -->
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+
+    props: ['noteId'],
+
     data () {
         return {
             showDialog: false,
@@ -37,6 +40,13 @@ export default {
                 text: 'Text',
             },
         }
+    },
+
+    created () {
+        // Get the note from vuex
+        console.log('NoteEditor - Show')
+        this.note = { ...this.getNoteById(this.noteId) }
+        console.log(this.note)
     },
 
     computed: {
@@ -59,24 +69,24 @@ export default {
             this.$emit('cancel')
         },
 
-        show (id) {
-            // Get the note from vuex
-            console.log('NoteEditor - Show')
-            console.log(id)
+        // show (id) {
+        //     // Get the note from vuex
+        //     console.log('NoteEditor - Show')
+        //     console.log(id)
 
-            console.log(this.getNoteById(id))
+        //     console.log(this.getNoteById(id))
             
             
-            this.note = { ...this.getNoteById(id) }
-            console.log(this.note)
+        //     this.note = { ...this.getNoteById(id) }
+        //     console.log(this.note)
 
-            this.showDialog = true
-        },
+        //     this.showDialog = true
+        // },
 
-        hide () {
-            console.log('NoteEditor - Hide')
-            this.showDialog = false
-        }
+        // hide () {
+        //     console.log('NoteEditor - Hide')
+        //     this.showDialog = false
+        // }
     },
 }
 </script>

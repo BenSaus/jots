@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="showDialog">
+    <!-- <q-dialog v-model="showDialog"> -->
         <q-card>
             <div class="tw-mx-2 tw-px-2">
 
@@ -21,7 +21,7 @@
             </div>
 
         </q-card>
-    </q-dialog>
+    <!-- </q-dialog> -->
 </template>
 
 <script>
@@ -34,8 +34,14 @@ export default {
             title: '',
             text: '',
             tags: '',
-            showDialog: false,
+            // showDialog: false,
         }
+    },
+    created () {
+        console.log('created')
+    },
+    mounted () {
+        console.log('mounted')
     },
 
     methods: {
@@ -62,20 +68,20 @@ export default {
             this.$emit('cancel')
         },
 
-        show () {
-            this._reset()
-            this.showDialog = true
-        },
+        // show () {
+        //     this._reset()
+        //     this.showDialog = true
+        // },
 
-        _reset () {
-            this.title = ''
-            this.text = ''
-            this.tags = []
-        },
+        // _reset () {
+        //     this.title = ''
+        //     this.text = ''
+        //     this.tags = []
+        // },
 
-        hide () {
-            this.showDialog = false
-        },
+        // hide () {
+        //     this.showDialog = false
+        // },
     }
 }
 </script>
