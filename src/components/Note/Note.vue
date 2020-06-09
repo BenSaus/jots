@@ -1,10 +1,11 @@
 <template>
-    <q-card class="tw-m-4 tw-px-4" @click="onClick">
+    <q-card class="tw-m-4 tw-px-4 column justify-between" @click="onClick">
         <div>
             <p class="tw-text-xl tw-mt-3">{{note.title}}</p>
             <span v-html="note.text"></span>
         </div>
         <q-card-actions align="right">
+
             <q-btn flat color="primary" icon="palette" @click.stop/>
             <q-btn flat color="primary" icon="archive" @click.stop/>
             <q-btn flat color="primary" icon="more_horiz" @click.stop>
@@ -19,6 +20,7 @@
                     </q-list>
                 </q-menu>
             </q-btn>
+            
         </q-card-actions>
 
         <q-dialog v-model="showDeleteNotePrompt" persistent>

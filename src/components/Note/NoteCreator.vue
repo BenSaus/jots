@@ -16,7 +16,17 @@
                                 v-model="title" 
                                 label="Title" 
                                 :rules="[val => !!val || 'Title is required']"
-                            />
+                                autofocus
+                            >
+                                <!-- <template v-slot:append>
+                                    <q-icon
+                                        v-if="title"
+                                        @click="title = ''"
+                                        name="close"
+                                        class="cursor-pointer"
+                                    />
+                                </template> -->
+                            </q-input>
                             <q-input class="tw-mt-3" v-model="text" outlined label="Text" type="textarea"/>
                             <q-input class="tw-mt-3" outlined v-model="tags" label="Tags" />
                         </div>
