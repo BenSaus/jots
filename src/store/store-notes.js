@@ -1,4 +1,4 @@
-
+import Vue from 'vue'
 import db from '../db' 
 
 const state = {
@@ -6,7 +6,6 @@ const state = {
 }
 
 
-// WARNING: These modify local state only NOT the persistant STATE!!!
 const mutations = {
     setNotes (state, notes) {
         state.notes = notes
@@ -19,10 +18,22 @@ const mutations = {
     updateNote (state, payload) {
         // Find note index
         const noteId = state.notes.findIndex(note => note.id === payload.id)
+        const note = state.notes[noteId]
 
-        // Use object assign to update note
-        // Remember: This is target, then source
-        Object.assign(state.notes[noteId], payload.updates)
+        // https://vuex.vuejs.org/guide/mutations.html
+        // Use the following to update state.
+        //     This is required for reactivity of all components 
+        for (const key of Object.keys(payload)) {
+            Vue.set(note, key, payload[key])
+        }
+    },
+
+    deleteNote (state, payload) {
+        const noteId = payload.id
+        const noteIndex = state.notes.findIndex(note => note.id === noteId)
+
+        if (noteIndex !== -1) state.notes.splice(noteIndex, 1)
+        else throw new Error(`Note not found: ${noteId}`)
     }
 }
 
@@ -32,7 +43,6 @@ const actions = {
     async fetchNotes (context) {
         const notes = await db.notes.toArray()
         console.log('fetchNotes', notes)
-
         context.commit('setNotes', notes)
     },
 
@@ -48,13 +58,45 @@ const actions = {
         console.log('Update Note')
         console.log(payload)
 
-        await db.notes.where('id').equals(payload.id).modify(payload.updates)
+            // // Find differences between originalNote and note
+
+            // // If there are differences
+
+            //     // create update payload
+            //     const updatePayload = {
+            //         id: this.note.id,
+            //         updates: {
+            //             // diffs here
+            //         }
+            //     }
+
+            //     // save the updated note
+            //      await db.notes.where('id').equals(payload.id).modify(payload.updates)
+
+
+        // WARNING: Currently the whole object is sent as an update.
+        //              This could be very inefficient if the object is large
+        //              Instead send only the updated values as outlined above
+        await db.notes.where('id').equals(payload.id).modify(payload)
         context.commit('updateNote', payload)
     },
+
+    async deleteNote (context, payload) {
+        console.log('Delete Note')
+        console.log(payload.id)
+        
+        // ERROR!!!!!!!!  What if there is an error when calling the DB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        await db.notes.where('id').equals(payload.id).delete()
+        context.commit('deleteNote', payload)
+    }
 }
 
 const getters = {
-    notes: (state) => state.notes
+    notes: (state) => state.notes,
+
+    getNoteById: (state) => (id) => {
+        return state.notes.find(note => note.id === id)
+    },
 }
 
 export default {

@@ -1,4 +1,3 @@
-
 <template>
     <q-dialog full-width full-height v-model="showDialog">
         <q-card>
@@ -16,8 +15,7 @@
                 </div>
 
                 <q-card-actions align="right">
-                    <q-btn flat round color="primary" @click="onSave" icon="save" />
-                    <!-- <q-btn flat round color="primary" @click="onCancel" icon="cancel" /> -->
+                    <q-btn color="primary" icon="save" label="Save" @click="onSave" />
                 </q-card-actions>
             </div>
 
@@ -26,28 +24,34 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    components: {
-
-    },
-
     data () {
         return {
             showDialog: false,
+
+            // Local copy used to store data BEFORE save is clicked
             note: {
                 title: 'Title',
                 text: 'Text',
-
-            }
+            },
         }
     },
 
+    computed: {
+        ...mapGetters('notes', ['getNoteById'])
+    },
+
     methods: {
+        ...mapActions('notes', ['updateNote']),
+
         onSave () {
             console.log('NoteEditor - Save')
             console.log(this.note)
-            this.$emit('save', this.note)
+
+            this.updateNote(this.note)
+            this.$emit('save')
         },
 
         onCancel () {
@@ -55,21 +59,25 @@ export default {
             this.$emit('cancel')
         },
 
-        show (note) {
-            // copy note into component memory
-            this.note = Object.assign({}, note)
+        show (id) {
+            // Get the note from vuex
+            console.log('NoteEditor - Show')
+            console.log(id)
+
+            console.log(this.getNoteById(id))
+            
+            
+            this.note = { ...this.getNoteById(id) }
+            console.log(this.note)
+
             this.showDialog = true
         },
 
         hide () {
+            console.log('NoteEditor - Hide')
             this.showDialog = false
         }
     },
-
-    beforeDestroy () {
-        // this.editor.destroy()
-    },
-
 }
 </script>
 

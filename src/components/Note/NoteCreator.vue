@@ -1,13 +1,12 @@
-
 <template>
-    <q-dialog full-width full-height v-model="showDialog">
+    <q-dialog v-model="showDialog">
         <q-card>
             <div class="tw-mx-2 tw-px-2">
 
                 <div class="column">
-                    <div class="tw-flex tw-justify-between">
+                    <div class="row justify-between">
                         <p class="tw-text-xl tw-mt-3">New Note</p>
-                        <q-btn icon="close" flat round color="primary" v-close-popup @click="onCancel" />
+                        <q-btn icon="close" flat color="primary" v-close-popup @click="onCancel" />
                     </div>
                     <div>
                         <q-input outlined v-model="title" label="Title" />
@@ -16,17 +15,17 @@
                     </div>
                 </div>
 
+                <q-card-actions align="right">
+                    <q-btn flat color="primary" label="Save" @click="onSave" />
+                </q-card-actions>
             </div>
 
-            <q-card-actions align="right">
-                <q-btn flat round color="primary" @click="onSave" icon="save" />
-                <!-- <q-btn flat round color="primary" @click="onCancel" icon="cancel" /> -->
-            </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 export default {
 
@@ -40,19 +39,23 @@ export default {
     },
 
     methods: {
+        ...mapActions('notes', ['createNote']),
+
         onSave () {
             console.log('NoteCreator - Save')
             
             const newNote = {
-                // id: Math.round(Math.random() * 10000),
                 title: this.title,
                 text: this.text,
                 tags: [],
                 created: Date.now(),
                 state: 'active'
             }
+
             console.log(newNote)
-            this.$emit('save', newNote)
+            this.createNote(newNote)
+
+            this.$emit('save')
         },
         onCancel () {
             console.log('NoteEditor - Cancel')
@@ -73,8 +76,6 @@ export default {
         hide () {
             this.showDialog = false
         },
-
-
     }
 }
 </script>
