@@ -26,11 +26,7 @@
             </div>
             <div class="row">
                 <q-btn flat color="primary" icon="palette" @click.stop>
-                    <q-menu>
-                        <div class="colorGrid">
-                            <q-btn v-for="color in noteColors" :key="color" v-close-popup dense flat @click="onChangeNoteColor(color)"><q-avatar size="25px" :color="color" /></q-btn>
-                        </div>
-                    </q-menu>
+                    <ColorPicker @pickColor="onChangeNoteColor" />
                 </q-btn>
                 <q-btn flat color="primary" icon="archive" @click.stop/>
                 <q-btn flat color="primary" icon="more_horiz" @click.stop>
@@ -69,6 +65,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import ColorPicker from '../ColorPicker'
 
 export default {
     props: ['note'],
@@ -76,24 +73,12 @@ export default {
         return {
             showDeleteNotePrompt: false,
             resolvedTags: [],
-            noteColors: [
-                'white',
-                'orange',
-                'blue',
-                'purple',
-                'pink',
-                'red',
-                'green',
-                'light-green',
-                'lime',
-                'teal',
-                'cyan',
-                'light-blue',
-                'indigo',
-                'amber'
-            ],
+
             cardClass: {}
         }
+    },
+    components: {
+        ColorPicker
     },
     created () {
         this.resolvedTags = this.resolveTags(this.note.tags)
@@ -152,11 +137,6 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-    .colorGrid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-    }
-</style>
+
 
 

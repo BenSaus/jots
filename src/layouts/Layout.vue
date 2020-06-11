@@ -18,7 +18,7 @@
         content-class="bg-grey-2"
     >
 
-        <q-item clickable exact v-ripple @click="onClickAllNotes">
+        <q-item clickable exact v-ripple @click="onClickAllNotes" to="/">
             <q-item-section avatar>
                 <q-icon name="note" />
             </q-item-section>
@@ -50,7 +50,9 @@
     </q-drawer>
 
     <q-page-container>
-        <router-view />
+        <div class="tw-m-5">
+            <router-view />
+        </div>
     </q-page-container>
 
   </q-layout>
@@ -72,6 +74,12 @@ export default {
                     label: 'Tags',
                 },
                 {
+                    icon: 'create',
+                    label: 'Edit Tags',
+                    separator: true,
+                    path: '/tags',
+                },
+                {
                     icon: 'delete',
                     label: 'Trash',
                     separator: false,
@@ -81,7 +89,7 @@ export default {
                     icon: 'settings',
                     label: 'Settings',
                     separator: false,
-                    path: '',
+                    path: '/settings',
                 },
                 {
                     icon: 'help',

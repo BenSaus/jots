@@ -8,7 +8,9 @@
     >
 
             <q-list class="tw-ml-10">
-                <q-item v-for="tag in allTags" :key="tag.id" clickable @click="onTagItemClick(tag)">{{tag.name}}</q-item>
+                <q-item v-for="tag in hotBarTags" :key="tag.id" clickable @click="onTagItemClick(tag)" to="/">
+                    {{tag.name}}
+                </q-item>
             </q-list>
 
     </q-expansion-item>
@@ -25,8 +27,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('tags', ['allTags'])
+        ...mapGetters('tags', ['allTags']),
+        hotBarTags () {
+            return this.allTags.filter(tag => tag.hotbar === true)
+        }
     }
+    
 }
 </script>
 

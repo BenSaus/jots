@@ -33,7 +33,7 @@ export default {
     },
     data () {
         return {
-            showCreateNoteDialog: true,
+            showCreateNoteDialog: false,
             showEditNoteDialog: false,
             noteToEdit: null,
         }
