@@ -2,7 +2,7 @@ import Vue from 'vue'
 import db from '../db' 
 
 const state = {
-    notes: []
+    notes: [],
 }
 
 
@@ -92,7 +92,7 @@ const actions = {
 }
 
 const getters = {
-    notes: (state) => state.notes,
+    allNotes: (state) => state.notes,
 
     getNoteById: (state) => (id) => {
         return state.notes.find(note => note.id === id)

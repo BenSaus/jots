@@ -88,6 +88,9 @@ import Vuex from 'vuex'
 
 
 import notes from './store-notes'
+import tags from './store-tags'
+import filters from './store-filters'
+
 Vue.use(Vuex)
 
 // /*
@@ -102,7 +105,9 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-        notes
+        notes,
+        tags,
+        filters
     },
 
     // enable strict mode (adds overhead!)

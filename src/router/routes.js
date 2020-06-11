@@ -7,8 +7,7 @@ const routes = [
         { path: '', component: () => import('pages/Index.vue') },
         { path: '/tags', component: () => import('pages/Tags.vue') }
     ]
-  }
-
+  },
 ]
 
 // Always leave this as last one

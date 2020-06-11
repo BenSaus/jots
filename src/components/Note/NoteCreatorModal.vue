@@ -8,9 +8,11 @@
                         <!-- Here I pass down the title to a child component
                         Then this title is set to sync so that it can make changes to the value
                         and emit those changes back to this parent -->
+
+                        <!-- WARNING: sync is no longer a thing and should not be used!! -->
                         <ModalNoteTitle ref="modalNoteTitle" :title.sync="note.title" />
                         <ModalNoteText :text.sync="note.text" />
-                        <ModalNoteTags :tags.sync="note.tags" />
+                        <ModalNoteTags :tags="note.tags" @change="onTagsChange" />
                     </div>
                     <ModalButtons> </ModalButtons>
                 </form>
@@ -28,7 +30,6 @@ import ModalButtons from 'components/Shared/ModalButtons'
 import ModalNoteTags from 'components/Shared/ModalNoteTags'
 
 export default {
-
     data: function () {
         return {
             note: {
@@ -47,10 +48,11 @@ export default {
         ModalButtons,
         ModalNoteText
     },
-
     methods: {
         ...mapActions('notes', ['createNote']),
-
+        onTagsChange (newTags) {
+            this.note.tags = newTags
+        },
         onSubmit () {
             console.log('NoteCreator - Submit')
 
@@ -59,7 +61,6 @@ export default {
             
             this.createNewNote()
         },
-
         createNewNote () {
             this.note.created = Date.now()
 
@@ -67,7 +68,6 @@ export default {
             this.createNote(this.note)
             this.$emit('close')
         },
-
         onCancel () {
             console.log('NoteEditor - Cancel')
             this.$emit('close')

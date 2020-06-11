@@ -12,14 +12,14 @@
         :rules="[val => !!val || 'Title is required']"
         autofocus
     >
-        <template v-slot:append>
+        <!-- <template v-slot:append>
             <q-icon
                 v-if="title"
                 @click="$emit('update:title', '')"
                 name="close"
                 class="cursor-pointer"
             />
-        </template>
+        </template> -->
     </q-input>
 </template>
 

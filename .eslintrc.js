@@ -57,6 +57,7 @@ module.exports = {
     'indent':'off',
     'comma-dangle':'off',
     'no-trailing-spaces': 'off',
+    'brace-style': ['error', 'stroustrup'],
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

@@ -9,7 +9,7 @@
                         and emit those changes back to this parent -->
                         <ModalNoteTitle ref="modalNoteTitle" :title.sync="internalNote.title" />
                         <ModalNoteText :text.sync="internalNote.text" />
-                        <ModalNoteTags :tags.sync="internalNote.tags" />
+                        <ModalNoteTags :tags="internalNote.tags" @change="onTagsChange" />
                     </div>
                     <ModalButtons> </ModalButtons>
                 </form>
@@ -57,6 +57,9 @@ export default {
     },
     methods: {
         ...mapActions('notes', ['updateNote']),
+        onTagsChange (newTags) {
+            this.internalNote.tags = newTags
+        },
         onSubmit () {
             console.log('NoteCreator - Submit')
 
