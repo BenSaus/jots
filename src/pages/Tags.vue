@@ -1,25 +1,16 @@
 <template>
     <q-page class="tw-px-5">
-        <div class="tw-w-4/6 tw-mx-auto">
+        <div class="lg:tw-w-4/6 tw-mx-auto">
             <div class="tw-text-4xl tw-mx-3 tw-mt-10">Edit Tags</div >
-            <q-card class="tw-mt-5 tw-mx-auto tw-mt-5">
+
+            <q-card v-if="!loading" class="tw-mt-5 tw-mx-auto tw-mt-5">
                 <q-card-section>
-                    <div class="column">
-                        
-                        <div v-for="tag in allTags" :key="tag.id" class="row justify-between">
-                            
-                            <div class="row items-center">
-                                <q-icon name="local_offer" class="tw-mr-3"></q-icon>
-                                <div class="tw-text-xl">
-                                    {{tag.name}}
-                                </div>
-                            </div>
-                            <div>{{tag.color}}</div>
-                            <div>On HotBar<q-toggle v-model="tag.hotbar" color="primary" /></div>
-
-                        </div>
-
+                    <NewTag />
+                    <hr>
+                    <div v-for="tag in allTags" :key="tag.id">
+                        <EditTag :tag="tag" />
                     </div>
+
                 </q-card-section>
             </q-card>
 
@@ -30,15 +21,33 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import NewTag from '../components/Tag/NewTag'
+import EditTag from '../components/Tag/EditTag'
+
 export default {
-
-    methods: {
-        ...mapActions('tags', ['updateTag', 'createTag', 'deleteTag'])
+    data () {
+        return {
+            internalTags: [],
+            loading: true
+        }
     },
+    components: {
+        NewTag,
+        EditTag
+    },
+    async created () {
+        await this.fetchTags()
+        this.loading = false
 
+        console.log('Tags - Created')
+    },
+    methods: {
+        ...mapActions('tags', ['fetchTags']),
+    },
     computed: {
         ...mapGetters('tags', ['allTags'])
     }
+
 }
 </script>
 

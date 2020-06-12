@@ -18,6 +18,14 @@
         content-class="bg-grey-2"
     >
 
+        <q-item clickable exact v-ripple to="/">
+            <q-btn dense flat round icon="menu" @click="left = !left" />
+            <q-toolbar-title>
+                
+            </q-toolbar-title>
+        </q-item>
+
+
         <q-item clickable exact v-ripple @click="onClickAllNotes" to="/">
             <q-item-section avatar>
                 <q-icon name="note" />
@@ -60,7 +68,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import TagMenu from 'components/TagMenu'
+import TagMenu from 'components/Tag/TagMenu'
 
 export default {
     components: {

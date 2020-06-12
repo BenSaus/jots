@@ -1,6 +1,6 @@
 <template>
     <q-page>
-        <NoteView @click="onNoteClick" />
+        <NoteView v-if="!loading" @click="onNoteClick" />
 
         <q-dialog full-width full-height persistent v-model="showEditNoteDialog">
             <NoteEditor :note="noteToEdit" @close="showEditNoteDialog = false" > </NoteEditor>
@@ -18,10 +18,10 @@
 </template>
 
 <script>
-
-import NoteEditor from '../components/Note/NoteEditorModal'
-import NoteCreator from '../components/Note/NoteCreatorModal'
-import NoteView from '../components/NoteView'
+import { mapActions } from 'vuex'
+import NoteEditor from 'components/Note/NoteEditorModal'
+import NoteCreator from 'components/Note/NoteCreatorModal'
+import NoteView from 'components/Note/NoteView'
 
 
 export default {
@@ -33,12 +33,20 @@ export default {
     },
     data () {
         return {
+            loading: true,
             showCreateNoteDialog: false,
             showEditNoteDialog: false,
             noteToEdit: null,
         }
     },
+    async created () {
+        await this.fetchNotes()
+        await this.fetchTags()
+        this.loading = false
+    },
     methods: {
+        ...mapActions('notes', ['fetchNotes']),
+        ...mapActions('tags', ['fetchTags']),
         onNoteClick (note) {
             this.noteToEdit = note
             this.showEditNoteDialog = true

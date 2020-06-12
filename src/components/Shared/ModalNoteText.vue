@@ -16,11 +16,6 @@
 <script>
 export default {
     props: ['text'],
-
-    mounted () {
-        console.log('this.$refs.textarea')
-        console.log(this.$refs.textarea)
-    }
 }
 </script>
 

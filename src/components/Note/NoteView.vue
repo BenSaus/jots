@@ -40,25 +40,14 @@ export default {
         processNotes (newTags) {
             console.log('Process Notes')
 
-            console.log('newTags')
-            console.log(newTags)
-            console.log(newTags.length)
-            
             let notesToInclude = []
 
             // test tags
             if (newTags.length > 0) {
                 // const tagsToUse = this.resolveTags(newTags)
-
                 notesToInclude = this.allNotes.filter(note => {
-                    console.log('note.tags')
-                    console.log(note.tags)
-
                     if (_.intersection(note.tags, newTags).length > 0) return true
                 })
-
-                console.log('notesToInclude')
-                console.log(notesToInclude)
             }
 
             // test ....
@@ -73,8 +62,6 @@ export default {
             }
             else {
                 this.processedNotes = notesToInclude
-                console.log('this.processedNotes')
-                console.log(this.processedNotes.length)
             }
         }
     },
@@ -90,8 +77,7 @@ export default {
         tagFilters: {
             immediate: true,
             handler (newValue, oldValue) {
-                console.log('tagFilters changed', newValue)
-                
+                console.log('tagFilters changed', newValue)      
                 this.processNotes(newValue)
             }
         }

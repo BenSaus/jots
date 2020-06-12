@@ -17,19 +17,29 @@
                     v-for="tag in resolvedTags"
                     :key="tag.id"
                     :color="tag.color"
-                    text-color="white"
                     class="q-mr-1"
                     dense
+                    outline
                 >
                     {{ tag.name }}
                 </q-chip>
             </div>
             <div class="row">
                 <q-btn flat color="primary" icon="palette" @click.stop>
+                    <q-tooltip>
+                        Note Color
+                    </q-tooltip>
                     <ColorPicker @pickColor="onChangeNoteColor" />
                 </q-btn>
-                <q-btn flat color="primary" icon="archive" @click.stop/>
+                <q-btn flat color="primary" icon="archive" @click.stop> 
+                    <q-tooltip>
+                        Archive Note
+                    </q-tooltip>
+                </q-btn>
                 <q-btn flat color="primary" icon="more_horiz" @click.stop>
+                    <q-tooltip>
+                        More
+                    </q-tooltip>
                     <q-menu>
                         <q-list style="min-width: 100px">
                             <q-item clickable v-close-popup>
@@ -93,7 +103,7 @@ export default {
         onClickDelete () {
             this.showDeleteNotePrompt = false
             this.deleteNote({ id: this.note.id })
-            this.$emit('delete', this.note)
+            // this.$emit('delete', this.note)
         },
         onClick () {
              // emit to parent
@@ -132,6 +142,18 @@ export default {
 
         textPreview: function () {
             return this.note.text.length > 100 ? this.note.text.substring(0, 100) + '...' : this.note.text 
+        }
+    },
+    watch: {
+        note: {
+            immediate: true,
+            // Notice: Deep true is required since we are trying to 
+            //      detect changes in the tag array inside the note
+            deep: true,
+            handler (newValue, oldValue) {
+                console.log('Note Changed')
+                this.resolvedTags = this.resolveTags(newValue)
+            }
         }
     }
 }

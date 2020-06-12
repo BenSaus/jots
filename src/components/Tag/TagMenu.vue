@@ -1,18 +1,16 @@
 <template>
     <q-expansion-item
         expand-separator
-        label="Tags"
+        label="Notes Tagged"
         style="background: white"
         icon="local_offer"
         class="bg-grey-2"
     >
-
-            <q-list class="tw-ml-10">
-                <q-item v-for="tag in hotBarTags" :key="tag.id" clickable @click="onTagItemClick(tag)" to="/">
-                    {{tag.name}}
-                </q-item>
-            </q-list>
-
+        <q-list class="tw-ml-10">
+            <q-item v-for="tag in hotBarTags" :key="tag.id" clickable @click="onTagItemClick(tag)" to="/">
+                {{tag.name}}
+            </q-item>
+        </q-list>
     </q-expansion-item>
 </template>
 
