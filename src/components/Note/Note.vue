@@ -56,7 +56,7 @@
             </div>
         </q-card-actions>
 
-        <q-dialog v-model="showDeleteNotePrompt" persistent>
+        <!-- <q-dialog v-model="showDeleteNotePrompt" persistent>
             <q-card>
                 <q-card-section class="row items-center">
                     <q-avatar icon="delete" color="negative" text-color="white" />
@@ -68,27 +68,33 @@
                     <q-btn flat label="Delete" color="negative" v-close-popup @click="onClickDelete" />
                 </q-card-actions>
             </q-card>
-        </q-dialog>
+        </q-dialog> -->
+
+        <DeletePrompt :show="showDeleteNotePrompt" :text="deleteNotePromptText" @confirm="onConfirmDelete" @cancel="showDeleteNotePrompt = false" />
+        
 
     </q-card>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ColorPicker from '../ColorPicker'
+import ColorPicker from 'components/ColorPicker'
+import DeletePrompt from 'components/DeletePrompt'
 
 export default {
     props: ['note'],
     data () {
         return {
             showDeleteNotePrompt: false,
+            deleteNotePromptText: '',
             resolvedTags: [],
 
             cardClass: {}
         }
     },
     components: {
-        ColorPicker
+        ColorPicker,
+        DeletePrompt
     },
     created () {
         this.resolvedTags = this.resolveTags(this.note.tags)
@@ -98,16 +104,20 @@ export default {
         ...mapActions('notes', ['deleteNote', 'updateNote']),
 
         promptToDelete () {
+            this.deleteNotePromptText = `Delete '${this.note.title}'?`
             this.showDeleteNotePrompt = true
         },
-        onClickDelete () {
+        onConfirmDelete () {
             this.showDeleteNotePrompt = false
-            // this.deleteNote({ id: this.note.id })
-            // this.$emit('delete', this.note)
 
             const deletedNote = { ...this.note }
             deletedNote.state = 'deleted'
             this.updateNote(deletedNote)
+
+            this.$q.notify({
+                message: `'${this.note.title}' deleted`,
+                color: 'primary'
+            })
         },
         onClick () {
              // emit to parent
@@ -132,6 +142,12 @@ export default {
             newNote.state = 'archived'
 
             this.updateNote(newNote)
+
+            // inside of a Vue file
+            this.$q.notify({
+                message: `'${this.note.title}' archived`,
+                color: 'primary'
+            })
         },
         setNoteColor (color) {
             const classString = `bg-${color}-1`
