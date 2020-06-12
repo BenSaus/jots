@@ -59,6 +59,16 @@
             </div>
         </q-list>
 
+
+        <q-item clickable exact v-ripple @click="onClickArchive" to="/">
+            <q-item-section avatar>
+                <q-icon name="archive" />
+            </q-item-section>
+            <q-item-section>
+                Archive
+            </q-item-section>
+        </q-item>
+
         <q-item clickable exact v-ripple @click="onClickTrash" to="/">
             <q-item-section avatar>
                 <q-icon name="delete" />
@@ -141,14 +151,15 @@ export default {
             this.setTagFilters([])
             this.setStateFilter('active')
         },
+        onClickArchive () {
+            this.setTagFilters([])
+            this.setStateFilter('archived')
+        },
         onClickTrash () {
             this.setTagFilters([])
             this.setStateFilter('deleted')
         },
-        onClickArchive () {
-            this.setTagFilters([])
-            this.setStateFilter('archived')
-        }
+
     }
 }
 </script>

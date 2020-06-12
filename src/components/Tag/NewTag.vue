@@ -53,6 +53,11 @@ export default {
         async onClickCreate () {
             console.log('OnClickCreate')
 
+            if (this.tag.name.trim === '') {
+                // TODO: SHOW WARNING MESSAGE
+                return
+            }
+
             // if (this.isDuplicateName(this.tag.name) === false) this.createTag(this.tag)
             // else show name warning!!!!!
             await this.createTag(this.tag)

@@ -31,7 +31,7 @@
                     </q-tooltip>
                     <ColorPicker @pickColor="onChangeNoteColor" />
                 </q-btn>
-                <q-btn flat color="primary" icon="archive" @click.stop> 
+                <q-btn flat color="primary" icon="archive" @click.stop="onClickArchive"> 
                     <q-tooltip>
                         Archive Note
                     </q-tooltip>
@@ -126,6 +126,12 @@ export default {
             // Update the database
             this.updateNote(newNote)
             this.setNoteColor(color)
+        },
+        onClickArchive () {
+            const newNote = { ...this.note }
+            newNote.state = 'archived'
+
+            this.updateNote(newNote)
         },
         setNoteColor (color) {
             const classString = `bg-${color}-1`
