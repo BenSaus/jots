@@ -55,7 +55,7 @@ export default {
 
             // order by modification date
             // notesToInclude.sort()
-
+            
             this.processedNotes = notesToInclude
         }
     },
@@ -68,6 +68,7 @@ export default {
     watch: {
         allNotes: {
             immediate: true,
+            // This is so we notice a change in note.state
             deep: true,
             handler (newValue, oldValue) {
                 console.log('All notes Changed!!')

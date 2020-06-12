@@ -12,7 +12,7 @@
                     borderless 
                     dense 
                     ref="nameInput"
-                    :value="tag.name"
+                    v-model="modifiedName"
                     @blur="onInputBlur"
                 ></q-input>
             </div>
@@ -63,18 +63,10 @@ export default {
     },
     methods: {
         ...mapActions('tags', ['updateTag', 'deleteTag']),
-        // onInput (text) {
-        //     console.log('OnInput')
-            
-        //     this.modifiedName = text
-        //     console.log(text)
-        // },
         onInputBlur () {
             console.log('Blur')
-            console.log(this.$refs.nameInput.innerValue, this.tag.name)
-            console.log(this.$refs.nameInput.innerValue !== this.tag.name)
-            
-            if (this.$refs.nameInput.innerValue !== this.tag.name) {
+
+            if (this.modifiedName !== this.tag.name) {
                 console.log('Updating tag name')
                 
                 // Copy prop and change the copy

@@ -48,11 +48,10 @@ const actions = {
         console.log('Create Tag')
         console.log(tag)
 
+        // Copy the tag to Keep input parameters untouched
         const newTag = { ...tag }
         newTag.id = uuid()
 
-        console.log(newTag)
-        
         await db.tags.put(newTag)
         context.commit('createTag', newTag)
     },
