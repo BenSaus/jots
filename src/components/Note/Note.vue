@@ -102,8 +102,12 @@ export default {
         },
         onClickDelete () {
             this.showDeleteNotePrompt = false
-            this.deleteNote({ id: this.note.id })
+            // this.deleteNote({ id: this.note.id })
             // this.$emit('delete', this.note)
+
+            const deletedNote = { ...this.note }
+            deletedNote.state = 'deleted'
+            this.updateNote(deletedNote)
         },
         onClick () {
              // emit to parent

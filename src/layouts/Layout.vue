@@ -37,6 +37,9 @@
 
 
 
+
+
+
         <q-list v-for="(menuItem, index) in menuList" :key="index">
             <div v-if="menuItem.label === 'Tags'" >
                 <TagMenu />
@@ -55,6 +58,16 @@
                 <q-separator v-if="menuItem.separator" />
             </div>
         </q-list>
+
+        <q-item clickable exact v-ripple @click="onClickTrash" to="/">
+            <q-item-section avatar>
+                <q-icon name="delete" />
+            </q-item-section>
+            <q-item-section>
+                Trash
+            </q-item-section>
+        </q-item>
+
     </q-drawer>
 
     <q-page-container>
@@ -78,6 +91,13 @@ export default {
         return {
             left: false,
             menuList: [
+                // {
+                //     icon: 'local_offer',
+                //     label: 'All Notes',
+                //     separator: false,
+                //     path: '/',
+                //     clickHandler: this.onClickAllNotes
+                // },
                 {
                     label: 'Tags',
                 },
@@ -86,18 +106,21 @@ export default {
                     label: 'Edit Tags',
                     separator: true,
                     path: '/tags',
+                    clickHandler: null
                 },
-                {
-                    icon: 'delete',
-                    label: 'Trash',
-                    separator: false,
-                    path: '',
-                },
+                // {
+                //     icon: 'delete',
+                //     label: 'Trash',
+                //     separator: true,
+                //     path: '/',
+                //     clickHandler: this.onClickTrash
+                // },
                 {
                     icon: 'settings',
                     label: 'Settings',
                     separator: false,
                     path: '/settings',
+                    clickHandler: null
                 },
                 {
                     icon: 'help',
@@ -105,16 +128,26 @@ export default {
                     label: 'Help',
                     separator: false,
                     path: '',
+                    clickHandler: null
                 }
             ]
         }
     },
 
     methods: {
-        ...mapActions('filters', ['setTagFilters']),
+        ...mapActions('filters', ['setTagFilters', 'setStateFilter']),
         onClickAllNotes () {
             // clear all filters
             this.setTagFilters([])
+            this.setStateFilter('active')
+        },
+        onClickTrash () {
+            this.setTagFilters([])
+            this.setStateFilter('deleted')
+        },
+        onClickArchive () {
+            this.setTagFilters([])
+            this.setStateFilter('archived')
         }
     }
 }

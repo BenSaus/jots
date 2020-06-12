@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import db from '../db' 
+import { v4 as uuid } from 'uuid'
 
 const state = {
     notes: [],
@@ -49,9 +50,13 @@ const actions = {
     async createNote (context, note) {
         console.log('Create Note')
         console.log(note)
+
+        // Creating a new note here to keep input parameters untouched
+        const newNote = { ...note }
+        newNote.id = uuid()
         
-        await db.notes.put(note)
-        context.commit('createNote', note)
+        await db.notes.put(newNote)
+        context.commit('createNote', newNote)
     },
 
     async updateNote (context, payload) {

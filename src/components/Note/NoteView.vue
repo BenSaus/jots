@@ -29,7 +29,7 @@ export default {
         }
     },
     created () {
-        this.processNotes(this.tagFilters)
+        this.processNotes(this.tagFilters, this.stateFilter)
     },
     methods: {
         onNoteClick (note) {
@@ -37,48 +37,55 @@ export default {
             this.$emit('click', note)
         },
 
-        processNotes (newTags) {
+        processNotes (tagFilters, stateFilter) {
             console.log('Process Notes')
 
-            let notesToInclude = []
+            let notesToInclude = this.allNotes
 
-            // test tags
-            if (newTags.length > 0) {
-                // const tagsToUse = this.resolveTags(newTags)
+            // test tagFilters
+            if (tagFilters.length > 0) {
+                // const tagsToUse = this.resolveTags(tagFilters)
                 notesToInclude = this.allNotes.filter(note => {
-                    if (_.intersection(note.tags, newTags).length > 0) return true
+                    if (_.intersection(note.tags, tagFilters).length > 0) return true
                 })
             }
 
-            // test ....
+            // Get only notes in the given state, deleted, archived, or active
+            notesToInclude = notesToInclude.filter(note => note.state === stateFilter)
 
-            // get flagged notes
-            // notesToInclude.map(id => )
+            // order by modification date
+            // notesToInclude.sort()
 
-            // order by
-
-            if (newTags.length === 0) {
-                this.processedNotes = this.allNotes
-            }
-            else {
-                this.processedNotes = notesToInclude
-            }
+            this.processedNotes = notesToInclude
         }
     },
     computed: {
-        // module, [getter]
-        ...mapGetters('notes', ['allNotes']),
-        // NOTICE: We are getting filters straights from vuex. 
+        // NOTICE: We are getting all data straight from vuex. 
         //      Not this component's parent
-        ...mapGetters('filters', ['tagFilters'])
-
+        ...mapGetters('notes', ['allNotes']),
+        ...mapGetters('filters', ['tagFilters', 'stateFilter'])
     },
     watch: {
+        allNotes: {
+            immediate: true,
+            deep: true,
+            handler (newValue, oldValue) {
+                console.log('All notes Changed!!')
+                this.processNotes(this.tagFilters, this.stateFilter)
+            }
+        },
         tagFilters: {
             immediate: true,
             handler (newValue, oldValue) {
                 console.log('tagFilters changed', newValue)      
-                this.processNotes(newValue)
+                this.processNotes(newValue, this.stateFilter)
+            }
+        },
+        stateFilter: {
+            immediate: true,
+            handler (newValue, oldValue) {
+                console.log('stateFilter changed', newValue)      
+                this.processNotes(this.tagFilters, newValue)
             }
         }
     },

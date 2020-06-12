@@ -18,10 +18,11 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
     methods: {
-        ...mapActions('filters', ['setTagFilters']),
+        ...mapActions('filters', ['setTagFilters', 'setStateFilter']),
         onTagItemClick (tag) {
             console.log('onTagItemClick', tag)
             this.setTagFilters([tag.id])
+            this.setStateFilter('active')
         }
     },
     computed: {
