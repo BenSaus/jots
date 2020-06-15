@@ -1,6 +1,10 @@
 <template>
     <q-page>
-        <NoteView v-if="!loading" @click="onNoteClick" />
+        <NoteView v-if="!loading" @click="onNoteClick" >
+            <template v-slot:default="slotProps">
+                <NoteActions :note="slotProps.note" />
+            </template>
+        </NoteView>
 
         <q-dialog full-width full-height persistent v-model="showEditNoteDialog">
             <NoteEditor :note="noteToEdit" @close="showEditNoteDialog = false" > </NoteEditor>
@@ -22,7 +26,7 @@ import { mapActions } from 'vuex'
 import NoteEditor from 'components/Note/NoteEditorModal'
 import NoteCreator from 'components/Note/NoteCreatorModal'
 import NoteView from 'components/Note/NoteView'
-
+import NoteActions from 'components/Note/NoteActions'
 
 export default {
     name: 'index',
@@ -30,6 +34,7 @@ export default {
         NoteEditor,
         NoteCreator,
         NoteView,
+        NoteActions
     },
     data () {
         return {

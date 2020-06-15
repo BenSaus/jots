@@ -4,7 +4,10 @@
             v-if="processedNotes.length > 0"
             class="tw-mx-auto tw-grid xl:tw-grid-cols-4 lg:tw-grid-cols-3 md:tw-grid-cols-2 tw-grid-cols-1"
         >
-            <Note v-for="note in processedNotes" :key="note.id" :note="note" @click="onNoteClick"></Note>
+            <Note v-for="note in processedNotes" :key="note.id" :note="note" @click="onNoteClick">
+                <slot v-bind:note="note">
+                </slot>
+            </Note>
         </div>
         <div v-if="processedNotes.length === 0" class="row justify-center items-center">
             <h4>No notes found</h4>
@@ -15,13 +18,15 @@
 
 <script>
 import Note from 'components/Note/Note'
+
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
 
 
 export default {
     components: {
-        Note
+        Note,
+
     },
     data () {
         return {

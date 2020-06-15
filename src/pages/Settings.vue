@@ -11,7 +11,7 @@
                             <q-toggle v-if="option.type === 'toggle'" v-model="option.model" color="primary" />
                         </div>
 
-                        <q-btn class="tw-mt-5" @click="onClickExport">Export Notes</q-btn>
+                        <q-btn color="primary" class="tw-mt-5" @click="onClickExport">Export Notes</q-btn>
 
 
                         <div class=" tw-mt-10 tw-text-xl tw-font-semibold tw-text-red-600">Danger Zone</div>
@@ -21,14 +21,14 @@
                                 <div class="column tw-mt-5">
                                     <p>Here you can import notes.</p>
                                     <input type='file' ref="fileInput" id='fileinput'>
-                                    <q-btn class="tw-mt-3" @click="onClickImport">Import Notes</q-btn>
+                                    <q-btn color="primary" class="tw-mt-3" @click="onClickImport">Import Notes</q-btn>
                                 </div>
                                 <!-- <input type='button' id='btnLoad' value='Load' onclick='loadFile();'> -->
                             </form>
 
                             <div class="tw-mt-10 column">
                                 <p>Clear all notes and tags. This cannot be undone.</p>
-                                <q-btn class="" @click="onClickClear">Clear Everything</q-btn>
+                                <q-btn color="primary" class="" @click="onClickClear">Clear Everything</q-btn>
                             </div>
 
                         </div>
@@ -52,6 +52,11 @@ export default {
         return {
 
             options: [
+                {
+                    name: 'Show Tags',
+                    type: 'toggle',
+                    model: true
+                },
                 {
                     name: 'Show Date Created',
                     type: 'toggle',
