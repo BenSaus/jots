@@ -1,6 +1,8 @@
 <template>
     <q-expansion-item
         expand-separator
+        dense
+        dense-toggle
         label="Notes Tagged"
         style="background: white"
         icon="local_offer"
@@ -23,12 +25,19 @@ export default {
             console.log('onTagItemClick', tag)
             this.setTagFilters([tag.id])
             this.setStateFilter('active')
-        }
+        },
     },
     computed: {
         ...mapGetters('tags', ['allTags']),
         hotBarTags () {
-            return this.allTags.filter(tag => tag.hotbar === true)
+            console.log('hotbars')
+            
+            console.log(this.allTags.filter(tag => tag.hotbar === true))
+            return this.allTags.filter(tag => tag.hotbar === true).sort((a, b) => {
+                if (a.name < b.name) return -1
+                else if (a.name === b.name) return 0
+                else return 1
+            })
         }
     }
     

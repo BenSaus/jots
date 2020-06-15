@@ -6,7 +6,7 @@
             :value="text"
             @input="$emit('update:text', $event)"
             outlined
-            label="Text" 
+            
             type="textarea"
             rows=29
         />

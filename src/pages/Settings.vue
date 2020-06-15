@@ -18,7 +18,7 @@
                         <div class=" dangerZone">
 
                             <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
-                                <div class="column tw-mt-5">
+                                <div class="column">
                                     <p>Here you can import notes.</p>
                                     <input type='file' ref="fileInput" id='fileinput'>
                                     <q-btn color="primary" class="tw-mt-3" @click="onClickImport">Import Notes</q-btn>
