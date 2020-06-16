@@ -6,11 +6,11 @@
             </template>
         </NoteView>
 
-        <q-dialog full-width full-height persistent v-model="showEditNoteDialog">
+        <q-dialog maximized persistent v-model="showEditNoteDialog">
             <NoteEditor :note="noteToEdit" @close="showEditNoteDialog = false" > </NoteEditor>
         </q-dialog>
 
-        <q-dialog full-width full-height persistent v-model="showCreateNoteDialog">
+        <q-dialog maximized persistent v-model="showCreateNoteDialog">
             <NoteCreator @close="showCreateNoteDialog = false"> </NoteCreator>
         </q-dialog>
 

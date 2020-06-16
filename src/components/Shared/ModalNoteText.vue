@@ -8,7 +8,7 @@
             outlined
             
             type="textarea"
-            rows=29
+            rows=32
         />
     </div>
 </template>
