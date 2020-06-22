@@ -9,10 +9,12 @@
                         Then this title is set to sync so that it can make changes to the value
                         and emit those changes back to this parent -->
 
-                        <!-- WARNING: sync is no longer a thing and should not be used!! -->
+
+                        <!-- WARNING: TODO: sync is no longer a thing and should not be used!! -->
                         <ModalNoteTitle ref="modalNoteTitle" :title.sync="note.title" />
                         <ModalNoteText :text.sync="note.text" />
                         <ModalNoteTags :tags="note.tags" @change="onTagsChange" />
+                        
                     </div>
                     <ModalButtons> </ModalButtons>
                 </form>

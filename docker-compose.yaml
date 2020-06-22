@@ -1,0 +1,31 @@
+version: '3.6'
+
+services:
+    postgres:
+        image: postgres:12.1
+        restart: always
+        ports:
+            - "9001:5432"
+        environment:
+            - POSTGRES_DB=noteDb
+            - POSTGRES_USER=noteUser
+            - POSTGRES_PASSWORD=mypass44321
+        volumes:
+            - db_volume:/var/lib/postgresql/data
+    graphql-engine:
+        image: hasura/graphql-engine:v1.1.0
+        depends_on: 
+            - postgres
+        ports:
+            - "9002:8080"
+        restart: always
+        environment:
+            HASURA_GRAPHQL_DATABASE_URL: postgres://noteUser:mypass44321@postgres:5432/noteDb
+            HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+            HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+            ## uncomment next line to set an admin secret
+            # HASURA_GRAPHQL_ADMIN_SECRET: testsecretkey
+            # HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+            # HASURA_GRAPHQL_JWT_SECRET: '{"type": "HS256", "key": "d46003d93e9965bd0f21459f23afd6e6e45e8a84214dffb92269063a9b35d71a1b114d513e587fa839fcf4db8304ccac33e46d022df802d38cc691ab4377e2da"}'
+volumes:
+    db_volume:

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import db from '../db' 
+import db from '../db/Dexie' 
 import { v4 as uuid } from 'uuid'
 
 const state = {

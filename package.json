@@ -16,6 +16,7 @@
     "axios": "^0.18.1",
     "dexie": "^3.0.1",
     "downloadjs": "^1.4.7",
+    "graphql-request": "^2.0.0",
     "lodash": "^4.17.15",
     "marked": "^0.8.2",
     "quasar": "^1.11.3",
