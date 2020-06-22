@@ -64,19 +64,28 @@ export default {
             this.deleteNotePromptText = `Delete '${this.note.title}'?`
             this.showDeleteNotePrompt = true
         },
-        onConfirmDelete () {
+        async onConfirmDelete () {
             this.showDeleteNotePrompt = false
 
             const deletedNote = { ...this.note }
             deletedNote.state = 'deleted'
-            this.updateNote(deletedNote)
 
-            this.$q.notify({
-                message: `'${this.note.title}' deleted`,
-                color: 'primary'
-            })
+            try {
+                await this.updateNote(deletedNote)
+                this.$q.notify({
+                    message: `'${this.note.title}' deleted`,
+                    color: 'primary'
+                })
+            }
+            catch (err) {
+                this.$q.notify({
+                    message: `An error occured attempting to delete '${this.note.title}'`,
+                    color: 'negative'
+                })
+                console.error(err)
+            }
         },
-        onChangeNoteColor (color) {
+        async onChangeNoteColor (color) {
             console.log('onChangeNoteColor')
             console.log(color)
 
@@ -86,20 +95,37 @@ export default {
             // Here I update the component but I'm not emitting a message to the
             //      parent component, which might...might be better
 
-            // Update the database
-            this.updateNote(newNote)
+            try {
+                // Update the database
+                await this.updateNote(newNote)
+            }
+            catch (err) {
+                this.$q.notify({
+                    message: `An error occured attempting to change the color of '${this.note.title}'`,
+                    color: 'negative'
+                })
+                console.error(err)
+            }
         },
-        onClickArchive () {
+        async onClickArchive () {
             const newNote = { ...this.note }
             newNote.state = 'archived'
 
-            this.updateNote(newNote)
-
-            // inside of a Vue file
-            this.$q.notify({
-                message: `'${this.note.title}' archived`,
-                color: 'primary'
-            })
+            try {
+                await this.updateNote(newNote)
+                
+                this.$q.notify({
+                    message: `'${this.note.title}' archived`,
+                    color: 'primary'
+                })
+            }
+            catch (err) {
+                this.$q.notify({
+                    message: `An error occured attempting to archive '${this.note.title}'`,
+                    color: 'negative'
+                })
+                console.error(err)
+            }
         },
     },
 }

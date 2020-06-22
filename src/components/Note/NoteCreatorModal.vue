@@ -33,8 +33,8 @@ export default {
     data: function () {
         return {
             note: {
-                title: this.title,
-                text: this.text,
+                title: '',
+                text: '',
                 tags: [],
                 created: null,
                 state: 'active'

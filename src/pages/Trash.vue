@@ -5,13 +5,18 @@
             <q-btn flat color="negative" @click="onClickEmpty">Empty Trash</q-btn>
         </div>
 
-        <NoteView v-if="!loading" @click="onNoteClick" />
+        <NoteView v-if="!loading" @click="onNoteClick">
+            <template v-slot:default="slotProps">
+                <NoteTrashActions :note="slotProps.note" />
+            </template>
+        </NoteView>
     </q-page>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import NoteView from 'components/Note/NoteView'
+import NoteTrashActions from 'components/Note/NoteTrashActions'
 
 export default {
     data () {
@@ -20,7 +25,8 @@ export default {
         }
     },
     components: {
-        NoteView
+        NoteView,
+        NoteTrashActions
     },
     async created () {
         this.setTagFilters([])

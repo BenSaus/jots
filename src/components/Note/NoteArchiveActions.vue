@@ -17,17 +17,26 @@ export default {
     props: ['note'],
     methods: {
         ...mapActions('notes', ['updateNote']),
-        onClickUnarchive () {
+
+        async onClickUnarchive () {
             const newNote = { ...this.note }
             newNote.state = 'active'
 
-            this.updateNote(newNote)
-
-            // inside of a Vue file
-            this.$q.notify({
-                message: `'${this.note.title}' unarchived`,
-                color: 'primary'
-            })
+            try {
+                await this.updateNote(newNote)
+                // inside of a Vue file
+                this.$q.notify({
+                    message: `'${this.note.title}' unarchived`,
+                    color: 'primary'
+                })
+            }
+            catch (err) {
+                this.$q.notify({
+                    message: `An error occured attempting to unarchive '${this.note.title}'`,
+                    color: 'negative'
+                })
+                console.error(err)
+            }
         }
     }
 }
