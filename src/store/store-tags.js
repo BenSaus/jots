@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import db from '../db/Dexie'
-import { v4 as uuid } from 'uuid'
-
+import tagDbDexie from '../db/TagDbDexie'
 
 const state = {
     tags: [],
@@ -38,7 +37,7 @@ const mutations = {
 
 const actions = {
     async fetchTags (context) {
-        const tags = await db.tags.toArray()
+        const tags = await tagDbDexie.getTags({ db })
         // const tags = testData
 
         console.log('fetchtags', tags)
@@ -48,21 +47,14 @@ const actions = {
         console.log('Create Tag')
         console.log(tag)
 
-        // Copy the tag to Keep input parameters untouched
-        const newTag = { ...tag }
-        newTag.id = uuid()
-
-        await db.tags.put(newTag)
+        const newTag = tagDbDexie.createTag({ db }, tag)
         context.commit('createTag', newTag)
     },
     async updateTag (context, payload) {
         console.log('Update Tag')
         console.log(payload)
 
-        // WARNING: Currently the whole object is sent as an update.
-        //              This could be very inefficient if the object is large
-        //              Instead send only the updated values as outlined in store-notes
-        await db.tags.where('id').equals(payload.id).modify(payload)
+        await tagDbDexie.updateTag({ db }, payload)
         context.commit('updateTag', payload)
     },
     async deleteTag (context, payload) {
@@ -70,6 +62,7 @@ const actions = {
         console.log(payload.id)
         
         await db.tags.where('id').equals(payload.id).delete()
+        await tagDbDexie.deleteTag({ db }, payload.id)
         context.commit('deleteTag', payload)
     },
     isDuplicateName (context, payload) {

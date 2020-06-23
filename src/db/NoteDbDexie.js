@@ -1,5 +1,4 @@
-// import util from './dbUtils'
-import uuid from 'uuid/v4'
+import uuid from 'uuid/dist/v4'
 
 const NoteDbDexie = {
     async getNotes (context) {
@@ -19,7 +18,7 @@ const NoteDbDexie = {
 
         // TODO: Try catch here???
         await db.notes.put(newNote)  
-        return newNote.id
+        return newNote
     },
     async updateNote (context, data) {
         const { db } = context

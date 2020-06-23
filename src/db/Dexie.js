@@ -1,17 +1,20 @@
 import Dexie from 'dexie'
 
 let db
-const SCHEMA_VERSION = 4
+const SCHEMA_VERSION = 5
 
 export function startDb () {
     db = new Dexie('notesDb')
     db.version(SCHEMA_VERSION).stores({
-            notes: '++&id, &title, text, *tags, color, created, modified, state',
-            tags: '&id, &name, color, hotbar'
+            notes: '++&id, &title, text, color, created, modified, state, created_at, updated_at',
+            tags: '&id, &name, color, hotbar, created_at, updated_at',
+            noteTags: 'note_id, tag_id, created_at, updated_at'
         }
     )
 }
 startDb()
+
+
 
 
 db.noteRoutine = {
@@ -22,13 +25,26 @@ db.noteRoutine = {
     exportJSON: async function () {
         const notesArray = await db.notes.toArray()
         const tagsArray = await db.tags.toArray()
-    
+
+        // const noteTags = []        
+        // for (const note of notesArray) {
+        //     const tags = note.tags
+        //     for (const tag of tags) {
+        //         console.log(tag)
+        //         noteTags.push({
+        //             note_id: note.id,
+        //             tag_id: tag
+        //         })
+        //     }
+        // }
+
         const allData = {
             notes: notesArray,
             tags: tagsArray,
-            version: SCHEMA_VERSION
+            version: SCHEMA_VERSION,
+            // noteTags: noteTags
         }
-    
+
         const blob = new Blob([JSON.stringify(allData, null, 2)], {
             type: 'text/plain;charset=utf8'
         })

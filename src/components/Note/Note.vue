@@ -66,7 +66,7 @@ export default {
             this.cardClass[classString] = true
         },
 
-        // SEPERATE
+        // SEPERATE THIS
         resolveTags (tagIdArray) {
             return this.allTags.filter(tag => {
                 if (this.note.tags.includes(tag.id)) return true

@@ -66,6 +66,10 @@ const NoteDb = {
                 }) {
                     returning {
                         id
+                        title
+                        text
+                        color
+                        state
                     }
                 }
             }
@@ -76,7 +80,7 @@ const NoteDb = {
 
         const resp = await request(endpointUrl, query, params)
         // WARNING: Assumes only one product is being created
-        return resp.insert_notes.returning[0].id
+        return resp.insert_notes.returning[0]
     },
     async updateNote (context, data) {
         const { request } = context

@@ -1,5 +1,4 @@
-// import util from './utilityMethods'
-import uuid from 'uuid/v4'
+import uuid from 'uuid/dist/v4'
 
 const TagDbDexie = {
     async getTags (context) {
@@ -18,7 +17,7 @@ const TagDbDexie = {
         newTag.id = uuid()
 
         await db.tags.put(newTag)
-        return newTag.id
+        return newTag
     },
     async updateTag (context, data) {
         const { db } = context

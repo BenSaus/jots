@@ -60,6 +60,9 @@ const TagDbGraphQL = {
                 ) {
                     returning {
                         id
+                        name
+                        color
+                        hotbar
                     }
                 }
             }

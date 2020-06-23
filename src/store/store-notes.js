@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import db from '../db/Dexie' 
-import { v4 as uuid } from 'uuid'
+import noteDbDexie from '../db/NoteDbDexie'
+import db from '../db/Dexie'
 
 const state = {
     notes: [],
@@ -42,7 +42,7 @@ const mutations = {
 // Best practice: create action that calls a mutation
 const actions = {
     async fetchNotes (context) {
-        const notes = await db.notes.toArray()
+        const notes = await noteDbDexie.getNotes({ db })
         console.log('fetchNotes', notes)
         context.commit('setNotes', notes)
     },
@@ -51,47 +51,23 @@ const actions = {
         console.log('Create Note')
         console.log(note)
 
-        // Creating a new note here to keep input parameters untouched
-        const newNote = { ...note }
-        newNote.id = uuid()
-        
-        await db.notes.put(newNote)
+        const newNote = await noteDbDexie.createNote({ db }, note)
         context.commit('createNote', newNote)
     },
 
     async updateNote (context, payload) {
         console.log('Update Note')
         console.log(payload)
-
-            // // Find differences between originalNote and note
-
-            // // If there are differences
-
-            //     // create update payload
-            //     const updatePayload = {
-            //         id: this.note.id,
-            //         updates: {
-            //             // diffs here
-            //         }
-            //     }
-
-            //     // save the updated note
-            //      await db.notes.where('id').equals(payload.id).modify(payload.updates)
-
-
-        // WARNING: Currently the whole object is sent as an update.
-        //              This could be very inefficient if the object is large
-        //              Instead send only the updated values as outlined above
-        await db.notes.where('id').equals(payload.id).modify(payload)
+        
+        await noteDbDexie.updateNote({ db }, payload)
         context.commit('updateNote', payload)
     },
 
     async deleteNote (context, payload) {
         console.log('Delete Note')
         console.log(payload.id)
-        
-        // ERROR!!!!!!!!  What if there is an error when calling the DB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        await db.notes.where('id').equals(payload.id).delete()
+
+        await noteDbDexie.deleteNote({ db }, payload.id)
         context.commit('deleteNote', payload)
     }
 }
@@ -105,7 +81,6 @@ const getters = {
 }
 
 export default {
-    // allows multiple stores
     namespaced: true,
     state,
     mutations,

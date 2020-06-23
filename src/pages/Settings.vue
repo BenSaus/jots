@@ -44,8 +44,7 @@
 
 <script>
 import download from 'downloadjs'
-import db from '../db'
-// import { exportDB } from 'dexie-export-import'
+import db from '../db/Dexie'
 
 export default {
     data () {
