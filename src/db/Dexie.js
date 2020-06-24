@@ -1,20 +1,17 @@
 import Dexie from 'dexie'
 
 let db
-const SCHEMA_VERSION = 5
+const SCHEMA_VERSION = 9 
 
 export function startDb () {
     db = new Dexie('notesDb')
     db.version(SCHEMA_VERSION).stores({
-            notes: '++&id, &title, text, color, created, modified, state, created_at, updated_at',
+            notes: '&id, &title, text, color, tags, created, modified, state, created_at, updated_at',
             tags: '&id, &name, color, hotbar, created_at, updated_at',
-            noteTags: 'note_id, tag_id, created_at, updated_at'
         }
     )
 }
 startDb()
-
-
 
 
 db.noteRoutine = {
@@ -26,23 +23,10 @@ db.noteRoutine = {
         const notesArray = await db.notes.toArray()
         const tagsArray = await db.tags.toArray()
 
-        // const noteTags = []        
-        // for (const note of notesArray) {
-        //     const tags = note.tags
-        //     for (const tag of tags) {
-        //         console.log(tag)
-        //         noteTags.push({
-        //             note_id: note.id,
-        //             tag_id: tag
-        //         })
-        //     }
-        // }
-
         const allData = {
             notes: notesArray,
             tags: tagsArray,
             version: SCHEMA_VERSION,
-            // noteTags: noteTags
         }
 
         const blob = new Blob([JSON.stringify(allData, null, 2)], {
@@ -58,13 +42,17 @@ db.noteRoutine = {
         console.log(newArr)
 
         // check version here
-        if (newArr.version !== SCHEMA_VERSION) {
-            console.error(`Current database schema version:${SCHEMA_VERSION}. File version:${newArr.version}`)
-            throw new Error('This export is a different version than the current database schema. Import aborted')
-        }
-    
+        // if (newArr.version !== SCHEMA_VERSION) {
+        //     console.error(`Current database schema version:${SCHEMA_VERSION}. File version:${newArr.version}`)
+        //     throw new Error('This export is a different version than the current database schema. Import aborted')
+        // }
+
+        console.log('Importing Notes')
         await db.notes.bulkAdd(newArr.notes)
+
+        console.log('Importing Tags')
         await db.tags.bulkAdd(newArr.tags)
+
     }
 }
 

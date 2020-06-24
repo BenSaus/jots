@@ -1,6 +1,6 @@
 <template>
         <q-card>
-            <q-card-section class="">
+            <q-card-section>
                 <form @submit.prevent="onSubmit">
                     <ModalHeader @close="onCancel">Edit Note</ModalHeader>
                     <div>
@@ -26,10 +26,10 @@ import ModalButtons from 'components/Shared/ModalButtons'
 import ModalNoteTags from 'components/Shared/ModalNoteTags'
 
 export default {
-    props: ['note'],
+    props: ['noteid'],
     data: function () {
         return {
-            internalNote: {}
+            internalNote: {},
         }
     },
     components: {
@@ -39,19 +39,16 @@ export default {
         ModalButtons,
         ModalNoteText
     },
-    computed: {
-        ...mapGetters('notes', ['getNoteById'])
-    },
     created () {
         console.log('NoteEditorModal - Created')
-        console.log(this.note)
-        
+        console.log(this.noteid)
         // Here I am copying the note from the parent INSTEAD of calling vuex
         //          because the parent MAY have modified the note already
-        this.internalNote = Object.assign({}, this.note)
+        // this.internalNote = Object.assign({}, this.note)
 
-        // Get the note directly from vuex instead of the parent
-        // this.internalNote = { ...this.getNoteById(this.noteId) }
+        // Gather all data here and hand it out to sub components
+        // We can't modify vuex data so make a copy
+        this.internalNote = Object.assign({}, this.getNoteById(this.noteid))
 
         console.log(this.internalNote)
     },
@@ -63,9 +60,10 @@ export default {
         onSubmit () {
             console.log('NoteCreator - Submit')
 
+            // Validate data
             this.$refs.modalNoteTitle.$refs.titleInput.validate()
             if (this.$refs.modalNoteTitle.$refs.titleInput.hasError) return null
-            
+
             this.updateNote(this.internalNote)
             this.$emit('close')
         },
@@ -73,12 +71,15 @@ export default {
             console.log('NoteEditor - Cancel')
             this.$emit('close')
         },
-    }
+    },
+    computed: {
+        ...mapGetters('notes', ['getNoteById']),
+    },
 }
 </script>
 
-<style lang="css" scoped>
 
+<style lang="css" scoped>
 </style>
 
 
