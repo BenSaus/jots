@@ -52,7 +52,6 @@ db.noteRoutine = {
 
         console.log('Importing Tags')
         await db.tags.bulkAdd(newArr.tags)
-
     }
 }
 

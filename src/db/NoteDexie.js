@@ -42,7 +42,12 @@ const NoteDbDexie = {
         //              This could be very inefficient if the object is large
         //              Instead send only the updated values as outlined above
 
-        // TODO: try catch here??
+
+        // split note.tags off here
+        // Convert to db format
+        // Check for differences
+        // If they are found update the db
+
         await db.notes.where('id').equals(data.id).modify(data)
         return data.id
     },
@@ -51,7 +56,6 @@ const NoteDbDexie = {
         const { db } = context
         // ERROR!!!!!!!!  What if there is an error when calling the DB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         
-        // TODO: try catch here??
         await db.notes.where('id').equals(id).delete()
         return id 
     }

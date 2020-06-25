@@ -7,7 +7,7 @@
         </NoteView>
 
         <q-dialog maximized persistent v-model="showEditNoteDialog">
-            <NoteEditor :note="noteToEdit" @close="showEditNoteDialog = false" > </NoteEditor>
+            <NoteEditor v-if="showEditNoteDialog" :noteid="noteToEdit.id" @close="showEditNoteDialog = false" > </NoteEditor>
         </q-dialog>
 
         <q-dialog maximized persistent v-model="showCreateNoteDialog">

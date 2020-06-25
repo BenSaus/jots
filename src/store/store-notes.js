@@ -1,21 +1,23 @@
 import Vue from 'vue'
-import noteDbDexie from '../db/NoteDbDexie'
+import noteDexie from '../db/NoteDexie'
 import db from '../db/Dexie'
+
+import request from 'graphql-request'
+import noteGraphQL from '../db/NoteGraphQL'
+
+const GRAPHQL = true
 
 const state = {
     notes: [],
 }
 
-
 const mutations = {
     setNotes (state, notes) {
         state.notes = notes
     },
-
     createNote (state, note) {
         state.notes.push(note)
     },
-
     updateNote (state, payload) {
         // Find note index
         const noteId = state.notes.findIndex(note => note.id === payload.id)
@@ -28,7 +30,6 @@ const mutations = {
             Vue.set(note, key, payload[key])
         }
     },
-
     deleteNote (state, payload) {
         const noteId = payload.id
         const noteIndex = state.notes.findIndex(note => note.id === noteId)
@@ -42,7 +43,10 @@ const mutations = {
 // Best practice: create action that calls a mutation
 const actions = {
     async fetchNotes (context) {
-        const notes = await noteDbDexie.getNotes({ db })
+        let notes
+        if (GRAPHQL) notes = await noteGraphQL.getNotes({ request })
+        else notes = noteDexie.getNotes({ db })
+        
         console.log('fetchNotes', notes)
         context.commit('setNotes', notes)
     },
@@ -51,15 +55,18 @@ const actions = {
         console.log('Create Note')
         console.log(note)
 
-        const newNote = await noteDbDexie.createNote({ db }, note)
+        let newNote
+        if (GRAPHQL) newNote = await noteGraphQL.createNote({ request }, note)
+        else newNote = await noteDexie.createNote({ db }, note)
         context.commit('createNote', newNote)
     },
 
     async updateNote (context, payload) {
         console.log('Update Note')
         console.log(payload)
-        
-        await noteDbDexie.updateNote({ db }, payload)
+    
+        if (GRAPHQL) await noteGraphQL.updateNote({ request }, payload)
+        else await noteDexie.updateNote({ db }, payload)
         context.commit('updateNote', payload)
     },
 
@@ -67,7 +74,8 @@ const actions = {
         console.log('Delete Note')
         console.log(payload.id)
 
-        await noteDbDexie.deleteNote({ db }, payload.id)
+        if (GRAPHQL) await noteGraphQL.deleteNote({ request }, payload.id)
+        else await noteDexie.deleteNote({ db }, payload.id)
         context.commit('deleteNote', payload)
     }
 }

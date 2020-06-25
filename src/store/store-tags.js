@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import db from '../db/Dexie'
-import tagDbDexie from '../db/TagDbDexie'
+import tagDexie from '../db/TagDexie'
+
+import request from 'graphql-request'
+import tagGraphQL from '../db/TagGraphQL'
+
+const GRAPHQL = true
+
 
 const state = {
     tags: [],
@@ -37,8 +43,10 @@ const mutations = {
 
 const actions = {
     async fetchTags (context) {
-        const tags = await tagDbDexie.getTags({ db })
-        // const tags = testData
+        let tags
+        
+        if (GRAPHQL) tags = await tagGraphQL.getTags({ request })
+        else tags = await tagDexie.getTags({ db })
 
         console.log('fetchtags', tags)
         context.commit('setTags', tags)
@@ -47,29 +55,30 @@ const actions = {
         console.log('Create Tag')
         console.log(tag)
 
-        const newTag = tagDbDexie.createTag({ db }, tag)
+        let newTag
+        if (GRAPHQL) newTag = await tagGraphQL.createTag({ request }, tag)
+        else newTag = await tagDexie.createTag({ db }, tag)
         context.commit('createTag', newTag)
     },
     async updateTag (context, payload) {
         console.log('Update Tag')
         console.log(payload)
 
-        await tagDbDexie.updateTag({ db }, payload)
+        if (GRAPHQL) await tagGraphQL.updateTag({ request }, payload)
+        else await tagDexie.updateTag({ db }, payload)
+
         context.commit('updateTag', payload)
     },
     async deleteTag (context, payload) {
         console.log('Delete Tag')
         console.log(payload.id)
-        
-        await db.tags.where('id').equals(payload.id).delete()
-        await tagDbDexie.deleteTag({ db }, payload.id)
+
+        if (GRAPHQL) await tagGraphQL.deleteTag({ request }, payload.id)
+        else await tagDexie.deleteTag({ db }, payload.id)
+
         context.commit('deleteTag', payload)
     },
-    isDuplicateName (context, payload) {
-        // Not sure this is the best place to check validation logic
-        //      but the data resides here
-        return false
-    }
+
 }
 
 const getters = {
@@ -77,6 +86,11 @@ const getters = {
     getTagById: (state) => (id) => {
         return state.tags.find(tag => tag.id === id)
     },
+    isDuplicateName: (stote) => (payload) => {
+        // Not sure this is the best place to check validation logic
+        //      but the data resides here
+        return false
+    }
 }
 
 export default {

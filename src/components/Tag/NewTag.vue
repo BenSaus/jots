@@ -24,7 +24,6 @@
                 <q-tooltip>Create New Tag</q-tooltip>
             </q-btn>
         </div>
-
     </div>
 </template>
 
@@ -52,6 +51,7 @@ export default {
 
         async onClickCreate () {
             console.log('OnClickCreate')
+            console.log(this.tag)
 
             if (this.tag.name.trim === '') {
                 // TODO: SHOW WARNING MESSAGE
@@ -60,8 +60,10 @@ export default {
 
             // if (this.isDuplicateName(this.tag.name) === false) this.createTag(this.tag)
             // else show name warning!!!!!
-            await this.createTag(this.tag)
-            console.log(this.tag)
+            const newTag = { ...this.tag }
+            console.log(newTag)
+            
+            await this.createTag(newTag)
 
             this.reset()
         },

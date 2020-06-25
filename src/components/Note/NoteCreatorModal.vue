@@ -38,7 +38,6 @@ export default {
                 title: '',
                 text: '',
                 tags: [],
-                created: null,
                 state: 'active'
             }
         }
@@ -64,8 +63,6 @@ export default {
             this.createNewNote()
         },
         createNewNote () {
-            this.note.created = Date.now()
-
             console.log(this.note)
             this.createNote(this.note)
             this.$emit('close')
