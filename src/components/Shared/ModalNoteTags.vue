@@ -50,28 +50,27 @@ export default {
     data () {
         return {
             model: [],
-            options: []
+            options: [],
+            tagIds: []
         }
     },
     created () {
+        this.tagIds = this.tags.map(tag => tag.id)
         // load available tags from db
         this.options = this.allTags
         if (this.tags.length > 0) this.loadTags()
 
         console.log('Created Note Tags')
-        console.log(this.tags, this.model)
+        console.log(this.tags)
     },
     methods: {
         onInput () {
             // send message up to parent here
-            const tags = this.model.map(tag => tag.id)
+            const tags = this.model
             this.$emit('change', tags)
         },
         loadTags () {
-            this.model = this.allTags.filter(tag => {
-                if (this.tags.includes(tag.id)) return true
-                else return false
-            })
+            this.model = this.allTags.filter(tag => this.tagIds.includes(tag.id)) 
         }
     },
     computed: {

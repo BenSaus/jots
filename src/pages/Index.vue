@@ -47,11 +47,13 @@ export default {
     async created () {
         await this.fetchNotes()
         await this.fetchTags()
+        await this.fetchNoteTags()
         this.loading = false
     },
     methods: {
         ...mapActions('notes', ['fetchNotes']),
         ...mapActions('tags', ['fetchTags']),
+        ...mapActions('noteTags', ['fetchNoteTags']),
         onNoteClick (note) {
             this.noteToEdit = note
             this.showEditNoteDialog = true

@@ -7,9 +7,9 @@
                         <!-- Here I pass down the title to a child component
                         Then this title is set to sync so that it can make changes to the value
                         and emit those changes back to this parent -->
-                        <ModalNoteTitle ref="modalNoteTitle" :title.sync="internalNote.title" />
-                        <ModalNoteText :text.sync="internalNote.text" />
-                        <ModalNoteTags :tags="internalNote.tags" @change="onTagsChange" />
+                        <ModalNoteTitle ref="modalNoteTitle" :title.sync="note.title" />
+                        <ModalNoteText :text.sync="note.text" />
+                        <ModalNoteTags :tags="tags" @change="onTagsChange" />
                     </div>
                     <ModalButtons> </ModalButtons>
                 </form>
@@ -24,12 +24,15 @@ import ModalNoteTitle from 'components/Shared/ModalNoteTitle'
 import ModalNoteText from 'components/Shared/ModalNoteText'
 import ModalButtons from 'components/Shared/ModalButtons'
 import ModalNoteTags from 'components/Shared/ModalNoteTags'
+import _ from 'lodash'
 
 export default {
     props: ['noteid'],
     data: function () {
         return {
-            internalNote: {},
+            note: {},
+            tags: [],
+            originalTags: []
         }
     },
     components: {
@@ -41,21 +44,23 @@ export default {
     },
     created () {
         console.log('NoteEditorModal - Created')
-        console.log(this.noteid)
-        // Here I am copying the note from the parent INSTEAD of calling vuex
-        //          because the parent MAY have modified the note already
-        // this.internalNote = Object.assign({}, this.note)
-
         // Gather all data here and hand it out to sub components
         // We can't modify vuex data so make a copy
-        this.internalNote = Object.assign({}, this.getNoteById(this.noteid))
+        this.note = Object.assign({}, this.getNoteById(this.noteid))
 
-        console.log(this.internalNote)
+        const tagIds = this.tagIdsForNote(this.note.id)
+        this.tags = this.resolveTags(tagIds)
+        this.originalTags = this.tags.map(tag => tag.id) 
+
+        console.log(this.note)
+        console.log('Tags', this.tags)
     },
     methods: {
         ...mapActions('notes', ['updateNote']),
+        ...mapActions('noteTags', ['linkNoteAndTag', 'unlinkNoteAndTag']),
         onTagsChange (newTags) {
-            this.internalNote.tags = newTags
+            this.tags = newTags
+            console.log('Tags changed', this.tags)
         },
         onSubmit () {
             console.log('NoteCreator - Submit')
@@ -64,8 +69,27 @@ export default {
             this.$refs.modalNoteTitle.$refs.titleInput.validate()
             if (this.$refs.modalNoteTitle.$refs.titleInput.hasError) return null
 
-            this.updateNote(this.internalNote)
+            this.updateNote(this.note)
+            this.updateTags()
             this.$emit('close')
+        },
+        updateTags () {
+            console.log('Setup tags')
+            const currentTags = this.tags.map(tag => tag.id)
+            
+            const addedTagIds = _.difference(currentTags, this.originalTags)
+            const removedTagIds = _.difference(this.originalTags, currentTags)
+
+            console.log('newTags', addedTagIds)
+            console.log('Remove Tags', removedTagIds)
+
+            for (const newTagId of addedTagIds) {
+                this.linkNoteAndTag({ noteId: this.note.id, tagId: newTagId })
+            } 
+
+            for (const deleteTagId of removedTagIds) {
+                this.unlinkNoteAndTag({ noteId: this.note.id, tagId: deleteTagId })
+            }
         },
         onCancel () {
             console.log('NoteEditor - Cancel')
@@ -74,6 +98,8 @@ export default {
     },
     computed: {
         ...mapGetters('notes', ['getNoteById']),
+        ...mapGetters('noteTags', ['tagIdsForNote']),
+        ...mapGetters('tags', ['resolveTags']),
     },
 }
 </script>

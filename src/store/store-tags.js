@@ -86,6 +86,9 @@ const getters = {
     getTagById: (state) => (id) => {
         return state.tags.find(tag => tag.id === id)
     },
+    resolveTags: (state) => (tagIdArray) => {
+        return state.tags.filter(tag => tagIdArray.includes(tag.id))
+    },
     isDuplicateName: (stote) => (payload) => {
         // Not sure this is the best place to check validation logic
         //      but the data resides here

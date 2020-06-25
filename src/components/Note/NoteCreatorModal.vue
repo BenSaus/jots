@@ -13,7 +13,7 @@
                         <!-- WARNING: TODO: sync is no longer a thing and should not be used!! -->
                         <ModalNoteTitle ref="modalNoteTitle" :title.sync="note.title" />
                         <ModalNoteText :text.sync="note.text" />
-                        <ModalNoteTags :tags="note.tags" @change="onTagsChange" />
+                        <ModalNoteTags :tags="tags" @change="onTagsChange" />
                         
                     </div>
                     <ModalButtons> </ModalButtons>
@@ -37,9 +37,9 @@ export default {
             note: {
                 title: '',
                 text: '',
-                tags: [],
                 state: 'active'
-            }
+            },
+            tags: []
         }
     },
     components: {
@@ -51,21 +51,28 @@ export default {
     },
     methods: {
         ...mapActions('notes', ['createNote']),
+        ...mapActions('noteTags', ['linkNoteAndTag']),
+
         onTagsChange (newTags) {
-            this.note.tags = newTags
+            this.tags = newTags
         },
-        onSubmit () {
-            console.log('NoteCreator - Submit')
+        async onSubmit () {
+            console.log('NoteCreator - Submit', this.tags)
 
             this.$refs.modalNoteTitle.$refs.titleInput.validate()
             if (this.$refs.modalNoteTitle.$refs.titleInput.hasError) return null
             
-            this.createNewNote()
-        },
-        createNewNote () {
-            console.log(this.note)
-            this.createNote(this.note)
+            const resp = await this.createNote(this.note)
+            console.log('CreateNote Response', resp)
+            this.linkNoteTags(resp.id)
+
             this.$emit('close')
+        },
+        async linkNoteTags (noteId) {
+            for (const tag of this.tags) {
+                console.log('Tag', tag)
+                await this.linkNoteAndTag({ noteId, tagId: tag })
+            }
         },
         onCancel () {
             console.log('NoteEditor - Cancel')

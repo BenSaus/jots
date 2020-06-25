@@ -58,7 +58,9 @@ const actions = {
         let newNote
         if (GRAPHQL) newNote = await noteGraphQL.createNote({ request }, note)
         else newNote = await noteDexie.createNote({ db }, note)
+
         context.commit('createNote', newNote)
+        return newNote
     },
 
     async updateNote (context, payload) {
@@ -82,7 +84,6 @@ const actions = {
 
 const getters = {
     allNotes: (state) => state.notes,
-
     getNoteById: (state) => (id) => {
         return state.notes.find(note => note.id === id)
     },

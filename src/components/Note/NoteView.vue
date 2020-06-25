@@ -68,7 +68,7 @@ export default {
         // NOTICE: We are getting all data straight from vuex. 
         //      Not this component's parent
         ...mapGetters('notes', ['allNotes']),
-        ...mapGetters('filters', ['tagFilters', 'stateFilter'])
+        ...mapGetters('filters', ['tagFilters', 'stateFilter']),
     },
     watch: {
         allNotes: {
@@ -93,7 +93,7 @@ export default {
                 console.log('stateFilter changed', newValue)      
                 this.processNotes(this.tagFilters, newValue)
             }
-        }
+        },
     },
 }
 </script>

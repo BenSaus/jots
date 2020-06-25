@@ -52,7 +52,9 @@ export default {
 
     },
     created () {
-        this.resolvedTags = this.resolveTags(this.note.tags)
+        // get this note's noteTags here
+        const tagIds = this.tagIdsForNote(this.note.id)
+        this.resolvedTags = this.resolveTags(tagIds)
         this.setNoteColor(this.note.color)
     },
     methods: {
@@ -65,17 +67,10 @@ export default {
             this.cardClass = {}
             this.cardClass[classString] = true
         },
-
-        // SEPERATE THIS
-        resolveTags (tagIdArray) {
-            return this.allTags.filter(tag => {
-                if (this.note.tags.includes(tag.id)) return true
-                else return false
-            })
-        }
     },
     computed: {
-        ...mapGetters('tags', ['allTags']),
+        ...mapGetters('tags', ['allTags', 'resolveTags']),
+        ...mapGetters('noteTags', ['tagIdsForNote', 'allNoteTags']),
 
         textPreview: function () {
             return this.note.text.length > 100 ? this.note.text.substring(0, 100) + '...' : this.note.text 
@@ -89,8 +84,17 @@ export default {
             deep: true,
             handler (newValue, oldValue) {
                 console.log('Note Changed')
-                this.resolvedTags = this.resolveTags(newValue)
+                const tagIds = this.tagIdsForNote(newValue.id)
+                this.resolvedTags = this.resolveTags(tagIds)
                 this.setNoteColor(this.note.color)
+            }
+        },
+        allNoteTags: {
+            immediate: true,
+            handler (newValue, oldValue) {
+                console.log('Note Tags changed')
+                const tagIds = this.tagIdsForNote(this.note.id)
+                this.resolvedTags = this.resolveTags(tagIds)
             }
         }
     }
