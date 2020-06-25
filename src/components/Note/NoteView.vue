@@ -44,6 +44,7 @@ export default {
 
         processNotes (tagFilters, stateFilter) {
             console.log('Process Notes')
+            console.log(tagFilters, stateFilter)
 
             let notesToInclude = this.allNotes
 
@@ -51,7 +52,8 @@ export default {
             if (tagFilters.length > 0) {
                 // const tagsToUse = this.resolveTags(tagFilters)
                 notesToInclude = this.allNotes.filter(note => {
-                    if (_.intersection(note.tags, tagFilters).length > 0) return true
+                    const tagIds = this.tagIdsForNote(note.id)
+                    if (_.intersection(tagIds, tagFilters).length > 0) return true
                 })
             }
 
@@ -69,6 +71,7 @@ export default {
         //      Not this component's parent
         ...mapGetters('notes', ['allNotes']),
         ...mapGetters('filters', ['tagFilters', 'stateFilter']),
+        ...mapGetters('noteTags', ['tagIdsForNote']),
     },
     watch: {
         allNotes: {
