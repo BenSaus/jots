@@ -72,6 +72,8 @@ const NoteDb = {
                         text
                         color
                         state
+                        updated_at
+                        created_at
                     }
                 }
             }

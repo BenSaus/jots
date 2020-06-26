@@ -71,7 +71,7 @@ export default {
         async linkNoteTags (noteId) {
             for (const tag of this.tags) {
                 console.log('Tag', tag)
-                await this.linkNoteAndTag({ noteId, tagId: tag })
+                await this.linkNoteAndTag({ noteId, tagId: tag.id })
             }
         },
         onCancel () {

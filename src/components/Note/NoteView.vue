@@ -61,7 +61,15 @@ export default {
             notesToInclude = notesToInclude.filter(note => note.state === stateFilter)
 
             // order by modification date
-            // notesToInclude.sort()
+            // TODO: Currently the updated_at field is updated inside NoteGraphQL...not in vuex
+            //      This means when vuex commits it does not include the updated updated_at timestamp
+            //      and therefore it is not resorted to the top
+            console.log('notesToinclude', notesToInclude)
+            notesToInclude.sort((a, b) => {
+                if (a.updated_at > b.updated_at) return -1
+                else if (a.updated_at < b.updated_at) return 1
+                else return 0
+            })
             
             this.processedNotes = notesToInclude
         }
