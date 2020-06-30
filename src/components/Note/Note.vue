@@ -1,13 +1,13 @@
 <template>
     <q-card class="tw-m-4 tw-px-4 column justify-between cursor-pointer" :class="cardClass" @click="onClick">
-        <div>
+        <div class="note--textcontainer">
             <p class="tw-text-xl tw-mt-3">{{note.title}}</p>
 
             <!-- Use this to interpret note text as html...be careful -->
             <!-- <span v-html="note.text"></span> -->
 
             <!-- Use this to just display plain text -->
-            <p style="max-width: 100%">{{textPreview}}</p>
+            <p class="overflow-hidden">{{textPreview}}</p>
         </div>
         <q-card-actions align="right">
             <div class="column items-end">
@@ -101,6 +101,10 @@ export default {
 }
 </script>
 
-
+<style>
+    .note--textcontainer {
+        max-width: 100%;
+    }
+</style>
 
 
