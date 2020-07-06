@@ -1,12 +1,5 @@
 import Vue from 'vue'
-import db from '../db/Dexie'
-import tagDexie from '../db/TagDexie'
-
-import request from 'graphql-request'
-import tagGraphQL from '../db/TagGraphQL'
-
-const GRAPHQL = true
-
+import db from '../db/Database'
 
 const state = {
     tags: [],
@@ -43,10 +36,7 @@ const mutations = {
 
 const actions = {
     async fetchTags (context) {
-        let tags
-        
-        if (GRAPHQL) tags = await tagGraphQL.getTags({ request })
-        else tags = await tagDexie.getTags({ db })
+        const tags = await db.tags.getTags()
 
         console.log('fetchtags', tags)
         context.commit('setTags', tags)
@@ -55,27 +45,21 @@ const actions = {
         console.log('Create Tag')
         console.log(tag)
 
-        let newTag
-        if (GRAPHQL) newTag = await tagGraphQL.createTag({ request }, tag)
-        else newTag = await tagDexie.createTag({ db }, tag)
+        const newTag = await db.tags.createTag(tag)
         context.commit('createTag', newTag)
     },
     async updateTag (context, payload) {
         console.log('Update Tag')
         console.log(payload)
 
-        if (GRAPHQL) await tagGraphQL.updateTag({ request }, payload)
-        else await tagDexie.updateTag({ db }, payload)
-
+        await db.tags.updateTag(payload)
         context.commit('updateTag', payload)
     },
     async deleteTag (context, payload) {
         console.log('Delete Tag')
         console.log(payload.id)
 
-        if (GRAPHQL) await tagGraphQL.deleteTag({ request }, payload.id)
-        else await tagDexie.deleteTag({ db }, payload.id)
-
+        await db.tags.deleteTag(payload.id)
         context.commit('deleteTag', payload)
     },
 

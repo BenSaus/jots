@@ -1,13 +1,16 @@
-import dbUtils from './dbUtils'
+import dbUtils from '../dbUtils'
 import uuid from 'uuid/dist/v4'
 
-const endpointUrl = 'http://192.168.1.10:9002/v1/graphql'
+// TODO: Inject this instead for testing
+import request from 'graphql-request'
+import config from '../../config'
+
+const endpointUrl = config.graphqlEndpoint
 
 const NoteTagGraphQL = {
-    async getNoteTags (context) {
+    async getNoteTags () {
         console.log('GetNoteTags')
-        
-        const { request } = context
+
         const query = `
             query {
                 note_tag {
@@ -22,13 +25,13 @@ const NoteTagGraphQL = {
 
         return resp.note_tag
     },
-    async createNoteTag (context, data) {
+    async createNoteTag (data) {
         console.log('Create Note Tag')  
         console.log(data)
        
         const processedData = this._processNoteTag(data)
 
-        const { request } = context
+
         const query = `
             mutation insert_note_tag(
                 $id: uuid!, 
@@ -65,9 +68,7 @@ const NoteTagGraphQL = {
 
         return finalData
     },
-    async deleteNoteTag (context, data) {
-        const { request } = context
-        
+    async deleteNoteTag (data) {
         const query = `
             mutation delete_note_tag($note_id: uuid!, $tag_id: uuid!){
                 delete_note_tag(

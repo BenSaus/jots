@@ -1,10 +1,4 @@
-import noteTagDexie from '../db/NoteTagDexie'
-import db from '../db/Dexie'
-
-import noteTagGraphQL from '../db/NoteTagGraphQL'
-import request from 'graphql-request'
-
-const GRAPHQL = true
+import db from '../db/Database'
 
 const state = {
     noteTags: []
@@ -29,9 +23,7 @@ const mutations = {
 
 const actions = {
     async fetchNoteTags (context) {
-        let noteTags
-        if (GRAPHQL) noteTags = await noteTagGraphQL.getNoteTags({ request })
-        else noteTags = await noteTagDexie.getNoteTags({ db })
+        const noteTags = await db.noteTags.getNoteTags()
         console.log('fetchNoteTags', noteTags)
 
         context.commit('setNoteTags', noteTags)
@@ -43,8 +35,8 @@ const actions = {
             tag_id: tagId,
         }
 
-        if (GRAPHQL) newNoteTag = await noteTagGraphQL.createNoteTag({ request }, newNoteTag)
-        else newNoteTag = await noteTagDexie.createNoteTag({ db }, newNoteTag)
+        newNoteTag = await db.noteTags.createNoteTag(newNoteTag)
+
         context.commit('createNoteTag', newNoteTag)
     },
     async unlinkNoteAndTag (context, payload) {
@@ -52,8 +44,7 @@ const actions = {
             note_id: payload.noteId,
             tag_id: payload.tagId
         }
-        if (GRAPHQL) await noteTagGraphQL.deleteNoteTag({ request }, noteTag) 
-        else await noteTagDexie.deleteNoteTag({ db }, payload)
+        await db.noteTags.deleteNoteTag(noteTag) 
         context.commit('deleteNoteTag', payload)
     },
 }

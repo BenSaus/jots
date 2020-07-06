@@ -1,11 +1,14 @@
-import util from './dbUtils'
+import util from '../dbUtils'
 import uuid from 'uuid/dist/v4'
 
-const endpointUrl = 'http://192.168.1.10:9002/v1/graphql'
+// TODO: Inject this instead for testing
+import request from 'graphql-request'
+import config from '../../config'
+
+const endpointUrl = config.graphqlEndpoint
 
 const TagDbGraphQL = {
-    async getTags (context) {
-        const { request } = context
+    async getTags () {
         const query = `
             query {
                 tags {
@@ -25,10 +28,9 @@ const TagDbGraphQL = {
         )
         return resp.tags
     },
-    async createTag (context, data) {
+    async createTag (data) {
         const newTag = this._addNewTimestamps(data)
 
-        const { request } = context
 
         const query = `
             mutation insert_tags(
@@ -74,9 +76,8 @@ const TagDbGraphQL = {
         newTag.updated_at = date.toISOString()
         return newTag
     },
-    async updateTag (context, data) {
+    async updateTag (data) {
         const updatedTag = this._addUpdateTimestamps(data)
-        const { request } = context
         const query = `
             mutation update_tags (
                 $id: uuid!,
@@ -117,8 +118,7 @@ const TagDbGraphQL = {
 
         return updatedTag
     },
-    async deleteTag (context, id) {
-        const { request } = context
+    async deleteTag (id) {
         const query = `
             mutation delete_tags($id: uuid!) {
                 delete_tags(where: {id: {_eq: $id}}) {

@@ -1,11 +1,5 @@
 import Vue from 'vue'
-import noteDexie from '../db/NoteDexie'
-import db from '../db/Dexie'
-
-import request from 'graphql-request'
-import noteGraphQL from '../db/NoteGraphQL'
-
-const GRAPHQL = true
+import db from '../db/Database'
 
 const state = {
     notes: [],
@@ -43,10 +37,10 @@ const mutations = {
 // Best practice: create action that calls a mutation
 const actions = {
     async fetchNotes (context) {
-        let notes
-        if (GRAPHQL) notes = await noteGraphQL.getNotes({ request })
-        else notes = noteDexie.getNotes({ db })
+        console.log(db)
         
+        const notes = await db.notes.getNotes()
+
         console.log('fetchNotes', notes)
         context.commit('setNotes', notes)
     },
@@ -55,9 +49,7 @@ const actions = {
         console.log('Create Note')
         console.log(note)
 
-        let newNote
-        if (GRAPHQL) newNote = await noteGraphQL.createNote({ request }, note)
-        else newNote = await noteDexie.createNote({ db }, note)
+        const newNote = await db.notes.createNote(note)
 
         context.commit('createNote', newNote)
         return newNote
@@ -67,8 +59,7 @@ const actions = {
         console.log('Update Note')
         console.log(payload)
     
-        if (GRAPHQL) await noteGraphQL.updateNote({ request }, payload)
-        else await noteDexie.updateNote({ db }, payload)
+        await db.notes.updateNote(payload)
         context.commit('updateNote', payload)
     },
 
@@ -76,8 +67,7 @@ const actions = {
         console.log('Delete Note')
         console.log(payload.id)
 
-        if (GRAPHQL) await noteGraphQL.deleteNote({ request }, payload.id)
-        else await noteDexie.deleteNote({ db }, payload.id)
+        await db.notes.deleteNote(payload.id)
         context.commit('deleteNote', payload)
     }
 }

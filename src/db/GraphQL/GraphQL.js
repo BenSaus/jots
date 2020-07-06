@@ -1,15 +1,15 @@
-import config from '../config'
+import config from '../../config'
 import request from 'graphql-request'
 
-// import NoteGraphQL from './NoteGraphQL'
-// import NoteTagGraphQL from './NoteTagGraphQL'
-// import TagGraphQL from './TagGraphQL'
+import NoteGraphQL from './NoteGraphQL'
+import NoteTagGraphQL from './NoteTagGraphQL'
+import TagGraphQL from './TagGraphQL'
 
 
 const db = {
-    // Note: NoteGraphQL,
-    // Tag: TagGraphQL,
-    // NoteTagGraphQL,
+    notes: NoteGraphQL,
+    tags: TagGraphQL,
+    noteTags: NoteTagGraphQL,
 
     request: request,
     routines: {

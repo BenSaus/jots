@@ -1,11 +1,14 @@
-import dbUtil from './dbUtils'
+import dbUtil from '../dbUtils'
 import uuid from 'uuid/dist/v4'
 
-const endpointUrl = 'http://192.168.1.10:9002/v1/graphql'
+// TODO: Inject this instead for testing
+import request from 'graphql-request'
+import config from '../../config'
+
+const endpointUrl = config.graphqlEndpoint
 
 const NoteDb = {    
-    async getNotes (context) {
-        const { request } = context
+    async getNotes () {
         const query = `
             query {
                 notes {
@@ -19,7 +22,7 @@ const NoteDb = {
                 }
             }
         `
-
+        
         const resp = await request(
             endpointUrl,
             query
@@ -29,13 +32,13 @@ const NoteDb = {
         return resp.notes
     },
 
-    async createNote (context, data) {
+    async createNote (data) {
         console.log('Create Note graphql')
         console.log(data)
         const processedNote = this._processNote(data)
         console.log(processedNote)
 
-        return await this._createProcessedNote(context, processedNote)
+        return await this._createProcessedNote(processedNote)
     },
     _processNote (data) {
         const timestampedNote = dbUtil.addNewTimestamps(data)
@@ -45,8 +48,7 @@ const NoteDb = {
 
         return noEmptyNote 
     },
-    async _createProcessedNote (context, data) {    
-        const { request } = context
+    async _createProcessedNote (data) {    
         const query = `
             mutation insert_notes(
                 $id: uuid!, 
@@ -84,9 +86,7 @@ const NoteDb = {
         return resp.insert_notes.returning[0]
     },
 
-    async updateNote (context, data) {
-        const { request } = context
-
+    async updateNote (data) {
         console.log('updateNote')
         console.log(data)
         const timestampedNote = dbUtil.addUpdateTimestamps(data)
@@ -128,8 +128,7 @@ const NoteDb = {
         return resp.update_notes.returning[0].id
     },
 
-    async deleteNote (context, id) {
-        const { request } = context
+    async deleteNote (id) {
         const query = `
             mutation delete_notes($id: uuid!) {
                 delete_notes(where: {id: {_eq: $id}}) {
