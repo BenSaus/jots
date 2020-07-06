@@ -10,13 +10,9 @@
                             <div>{{option.name}}</div>
                             <q-toggle v-if="option.type === 'toggle'" v-model="option.model" color="primary" />
                         </div>
-
                         <q-btn color="primary" class="tw-mt-5" @click="onClickExport">Export Notes</q-btn>
-
-
                         <div class=" tw-mt-10 tw-text-xl tw-font-semibold tw-text-red-600">Danger Zone</div>
                         <div class=" dangerZone">
-
                             <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
                                 <div class="column">
                                     <p>Here you can import notes.</p>
@@ -25,15 +21,12 @@
                                 </div>
                                 <!-- <input type='button' id='btnLoad' value='Load' onclick='loadFile();'> -->
                             </form>
-
                             <div class="tw-mt-10 column">
                                 <p>Clear all notes and tags. This cannot be undone.</p>
                                 <q-btn color="primary" class="" @click="onClickClear">Clear Everything</q-btn>
                             </div>
-
                         </div>
 
-                    
                     </div>
                 </q-card-section>
             </q-card>
@@ -44,7 +37,8 @@
 
 <script>
 import download from 'downloadjs'
-import db from '../db/Dexie'
+import db from '../db/Database'
+
 
 export default {
     data () {
@@ -72,7 +66,7 @@ export default {
     },
     methods: {
         async onClickExport () {
-            const data = await db.noteRoutine.exportJSON()
+            const data = await db.routines.exportJSON()
             download(data, 'notes.json', 'application/json')
         },
         onClickImport () {
@@ -84,7 +78,7 @@ export default {
         },
         async receivedImportedData (e) {
             try {
-                await db.noteRoutine.importText(e.target.result)
+                await db.routines.importText(e.target.result)
                 const noteNum = await db.notes.count()
                 this.$q.notify({
                     message: `Imported ${noteNum} notes`,
@@ -102,7 +96,7 @@ export default {
 
         async onClickClear () {
             try {
-                await db.noteRoutine.clearDb()
+                await db.routines.clearDb()
             }
             catch (err) {
                 console.error(err)

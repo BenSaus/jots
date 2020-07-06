@@ -87,6 +87,10 @@ const getters = {
     getNoteById: (state) => (id) => {
         return state.notes.find(note => note.id === id)
     },
+    isValid: (state) => (note) => {
+        // check for duplicate titles here...
+
+    }
 }
 
 export default {

@@ -1,7 +1,8 @@
+import config from '../config'
 import Dexie from 'dexie'
 
 let db
-const SCHEMA_VERSION = 9 
+const SCHEMA_VERSION = config.schemaVersion 
 
 export function startDb () {
     db = new Dexie('notesDb')
@@ -14,7 +15,7 @@ export function startDb () {
 startDb()
 
 
-db.noteRoutine = {
+db.routines = {
     clearDb: async function () {
         await db.notes.clear()
         await db.tags.clear()
