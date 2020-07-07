@@ -31,7 +31,6 @@ const NoteDb = {
     
         return resp.notes
     },
-
     async createNote (data) {
         console.log('Create Note graphql')
         console.log(data)
@@ -85,7 +84,6 @@ const NoteDb = {
         // WARNING: Assumes only one product is being created
         return resp.insert_notes.returning[0]
     },
-
     async updateNote (data) {
         console.log('updateNote')
         console.log(data)
@@ -127,7 +125,6 @@ const NoteDb = {
 
         return resp.update_notes.returning[0].id
     },
-
     async deleteNote (id) {
         const query = `
             mutation delete_notes($id: uuid!) {
@@ -148,6 +145,51 @@ const NoteDb = {
             { id }
         )
         return resp.delete_notes.returning[0].id
+    },
+    async deleteAll () {
+        const query = `
+            mutation {
+                delete_notes(where: {}) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query)
+        return resp.delete_notes.affected_rows
+    },
+    async bulkAdd (data) {
+        console.log('Bulk Add')
+        console.log(data)
+
+        const reformatted = {
+            data: data
+        }
+
+        const query = `
+            mutation insert_notes($data: [notes_insert_input!]!) {
+                insert_notes(objects: $data) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query, reformatted)
+        return resp.insert_notes.affected_rows
+    },
+    async count () {
+        const query = `
+            query {
+                notes_aggregate {
+                    aggregate {
+                        count
+                    }
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query)
+        return resp.notes_aggregate.aggregate.count
     }
 
 }

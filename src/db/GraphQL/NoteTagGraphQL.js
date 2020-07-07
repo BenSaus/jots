@@ -83,6 +83,37 @@ const NoteTagGraphQL = {
         
         const resp = await request(endpointUrl, query, data)
         return resp.delete_note_tag
+    },
+    async deleteAll () {
+        const query = `
+            mutation {
+                delete_note_tag(where: {}) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query)
+        return resp.delete_note_tag.affected_rows
+    },
+    async bulkAdd (data) {
+        console.log('Bulk Add')
+        console.log(data)
+
+        const reformatted = {
+            data: data
+        }
+
+        const query = `
+            mutation insert_note_tag($data: [note_tag_insert_input!]!) {
+                insert_note_tag(objects: $data) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query, reformatted)
+        return resp.insert_note_tag.affected_rows
     }
 }
 

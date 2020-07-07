@@ -62,6 +62,9 @@ const db = {
     
             console.log('Importing Tags')
             await dexie.tags.bulkAdd(newArr.tags)
+            
+            console.log('Importing NoteTags')
+            await dexie.noteTags.bulkAdd(newArr.noteTags)
         }
     }
 }

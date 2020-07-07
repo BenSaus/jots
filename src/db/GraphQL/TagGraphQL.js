@@ -136,6 +136,37 @@ const TagDbGraphQL = {
             { id }
         )
         return resp.delete_tags.returning[0].id
+    },
+    async deleteAll () {
+        const query = `
+            mutation {
+                delete_tags(where: {}) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query)
+        return resp.delete_tags.affected_rows
+    },
+    async bulkAdd (data) {
+        console.log('Bulk Add')
+        console.log(data)
+
+        const reformatted = {
+            data: data
+        }
+
+        const query = `
+            mutation insert_tags($data: [tags_insert_input!]!) {
+                insert_tags(objects: $data) {
+                    affected_rows
+                }
+            }
+        `
+
+        const resp = await request(endpointUrl, query, reformatted)
+        return resp.insert_tags.affected_rows
     }
 
 }

@@ -13,8 +13,12 @@ const db = {
 
     request: request,
     routines: {
-        async clearDb () {
-            console.log('clear all notes')
+        clearDb: async function () {
+            console.log(this)
+            
+            await NoteGraphQL.deleteAll()
+            await NoteTagGraphQL.deleteAll()
+            await TagGraphQL.deleteAll()
         },
         exportJSON: async function () {
             // TODO: Combine these promises
@@ -95,9 +99,28 @@ const db = {
             console.log(resp)
             return resp.note_tag
         },
+        importText: async function (data) {
+            const lines = data
+            const newArr = JSON.parse(lines)
+        
+            console.log(newArr)
 
-        importText: async function () {
+            // check version here
+            // if (newArr.version !== SCHEMA_VERSION) {
+            //     console.error(`Current database schema version:${SCHEMA_VERSION}. File version:${newArr.version}`)
+            //     throw new Error('This export is a different version than the current database schema. Import aborted')
+            // }
 
+            // TODO: Combine these promises and stop import on any errors
+
+            console.log('Importing Notes')
+            await NoteGraphQL.bulkAdd(newArr.notes)
+
+            console.log('Importing Tags')
+            await TagGraphQL.bulkAdd(newArr.tags)
+            
+            console.log('Importing NoteTags')
+            await NoteTagGraphQL.bulkAdd(newArr.noteTags)
         }
     }
 }

@@ -23,7 +23,7 @@
                             </form>
                             <div class="tw-mt-10 column">
                                 <p>Clear all notes and tags. This cannot be undone.</p>
-                                <q-btn color="primary" class="" @click="onClickClear">Clear Everything</q-btn>
+                                <q-btn color="primary" class="" @click="promptToClear">Clear Everything</q-btn>
                             </div>
                         </div>
 
@@ -31,11 +31,14 @@
                 </q-card-section>
             </q-card>
 
+            <DeletePrompt :show="showDeleteNotePrompt" :text="deleteNotePromptText" @confirm="onConfirmClear" @cancel="showDeleteNotePrompt = false" />
+
         </div>
     </q-page>
 </template>
 
 <script>
+import DeletePrompt from 'components/DeletePrompt'
 import download from 'downloadjs'
 import db from '../db/Database'
 
@@ -43,6 +46,8 @@ import db from '../db/Database'
 export default {
     data () {
         return {
+            showDeleteNotePrompt: false,
+            deleteNotePromptText: '',
 
             options: [
                 {
@@ -64,7 +69,11 @@ export default {
             ]
         }
     },
+    components: {
+        DeletePrompt
+    },
     methods: {
+        
         async onClickExport () {
             const data = await db.routines.exportJSON()
             download(data, 'notes.json', 'application/json')
@@ -94,7 +103,13 @@ export default {
             }
         },
 
-        async onClickClear () {
+        promptToClear () {
+            this.deleteNotePromptText = 'Are you sure you want to clear All Notes?'
+            this.showDeleteNotePrompt = true
+        },
+        async onConfirmClear () {
+            this.showDeleteNotePrompt = false
+
             try {
                 await db.routines.clearDb()
             }
