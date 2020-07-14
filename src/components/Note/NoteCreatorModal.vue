@@ -5,16 +5,9 @@
                 <form @submit.prevent="onSubmit">
                     <ModalHeader @close="onCancel">New Note</ModalHeader>
                     <div>
-                        <!-- Here I pass down the title to a child component
-                        Then this title is set to sync so that it can make changes to the value
-                        and emit those changes back to this parent -->
-
-
-                        <!-- WARNING: TODO: sync is no longer a thing and should not be used!! -->
-                        <ModalNoteTitle ref="modalNoteTitle" :title.sync="note.title" />
-                        <ModalNoteText :text.sync="note.text" />
+                        <ModalNoteTitle :title="note.title" @onChange="onTitleChange" ref="modalNoteTitle" />
+                        <ModalNoteText :text="note.text" @onChange="onTextChange" />
                         <ModalNoteTags :tags="tags" @change="onTagsChange" />
-                        
                     </div>
                     <ModalButtons> </ModalButtons>
                 </form>
@@ -25,11 +18,11 @@
 
 <script>
 import { mapActions } from 'vuex'
-import ModalHeader from 'components/Shared/ModalHeader'
-import ModalNoteTitle from 'components/Shared/ModalNoteTitle'
-import ModalNoteText from 'components/Shared/ModalNoteText'
-import ModalButtons from 'components/Shared/ModalButtons'
-import ModalNoteTags from 'components/Shared/ModalNoteTags'
+import ModalHeader from './Shared/ModalHeader'
+import ModalNoteTitle from './Shared/ModalNoteTitle'
+import ModalNoteText from './Shared/ModalNoteText'
+import ModalButtons from './Shared/ModalButtons'
+import ModalNoteTags from './Shared/ModalNoteTags'
 
 export default {
     data: function () {
@@ -52,9 +45,15 @@ export default {
     methods: {
         ...mapActions('notes', ['createNote']),
         ...mapActions('noteTags', ['linkNoteAndTag']),
-
+        
+        onTitleChange (newTitle) {
+            this.note.title = newTitle
+        },
         onTagsChange (newTags) {
             this.tags = newTags
+        },
+        onTextChange (event) {
+            this.note.text = event
         },
         async onSubmit () {
             console.log('NoteCreator - Submit', this.tags)

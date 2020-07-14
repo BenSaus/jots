@@ -1,15 +1,14 @@
 <template>
     <div class="row justify-end">
 
-
         <div class="col row items-center">
             <div class="tw-text-xl">
                 <q-input 
                     class="tw-text-xl" 
                     type="text" 
-                    filled 
+                    filled
                     bg-color="white" 
-                    borderless 
+                    borderless
                     dense 
                     ref="nameInput"
                     v-model="modifiedName"

@@ -2,13 +2,12 @@
   <q-layout view="hHh lpR fFf">
 
     <q-header elevated class="bg-white text-black">
-      <q-toolbar >
-        <q-btn dense flat round icon="menu" @click="left = !left" />
-
-        <q-toolbar-title >
-          Notes
-        </q-toolbar-title>
-      </q-toolbar>
+        <q-toolbar >
+            <q-btn dense flat round icon="menu" @click="left = !left" />
+            <q-toolbar-title >
+                Notes
+            </q-toolbar-title>
+        </q-toolbar>
     </q-header>
 
     <q-drawer 
@@ -18,13 +17,10 @@
         content-class="bg-grey-2"
     >
 
-        <q-item clickable exact v-ripple to="/">
-            <q-btn dense flat round icon="menu" @click="left = !left" />
-            <q-toolbar-title>
-                
-            </q-toolbar-title>
-        </q-item>
 
+        <q-item class="tw-block lg:tw-hidden" clickable exact v-ripple to="/">
+            <q-btn dense flat round icon="menu" @click="left = !left" />
+        </q-item>
 
         <q-item clickable exact v-ripple @click="onClickAllNotes" to="/">
             <q-item-section avatar>
@@ -34,11 +30,6 @@
                 All Notes
             </q-item-section>
         </q-item>
-
-
-
-
-
 
         <q-list v-for="(menuItem, index) in menuList" :key="index">
             <div v-if="menuItem.label === 'Tags'" >
@@ -101,13 +92,6 @@ export default {
         return {
             left: false,
             menuList: [
-                // {
-                //     icon: 'local_offer',
-                //     label: 'All Notes',
-                //     separator: false,
-                //     path: '/',
-                //     clickHandler: this.onClickAllNotes
-                // },
                 {
                     label: 'Tags',
                 },
@@ -118,13 +102,6 @@ export default {
                     path: '/tags',
                     clickHandler: null
                 },
-                // {
-                //     icon: 'delete',
-                //     label: 'Trash',
-                //     separator: true,
-                //     path: '/',
-                //     clickHandler: this.onClickTrash
-                // },
                 {
                     icon: 'settings',
                     label: 'Settings',
