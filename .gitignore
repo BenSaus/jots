@@ -2,6 +2,7 @@ Start.bat
 .DS_Store
 .thumbs.db
 node_modules
+docker-compose.yaml
 
 # Quasar core related directories
 .quasar
