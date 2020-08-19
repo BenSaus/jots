@@ -1,9 +1,4 @@
 
-// export enum DbMode {
-//     GraphQL,
-//     Dexie
-// }
-
 const config = {
     graphqlEndpoint: 'http://localhost:9002/v1/graphql',
     schemaVersion: 10,
