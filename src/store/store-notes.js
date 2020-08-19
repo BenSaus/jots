@@ -33,8 +33,6 @@ const mutations = {
     }
 }
 
-
-// Best practice: create action that calls a mutation
 const actions = {
     async fetchNotes (context) {
         console.log(db)
