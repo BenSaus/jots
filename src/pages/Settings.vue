@@ -10,28 +10,73 @@
                             <div>{{option.name}}</div>
                             <q-toggle v-if="option.type === 'toggle'" v-model="option.model" color="primary" />
                         </div>
-                        <q-btn color="primary" class="tw-mt-5" @click="onClickExport">Export Notes</q-btn>
-                        <div class=" tw-mt-10 tw-text-xl tw-font-semibold tw-text-red-600">Danger Zone</div>
-                        <div class=" dangerZone">
+                        <p class="tw-mt-3">Default Note Color: </p>
+
+                        <q-expansion-item
+                            expand-separator
+                            icon="settings"
+                            label="Advanced settings"
+
+                        >
+                        
+                        <div class="tw-mt-5 tw-text-xl tw-font-semibold tw-text-red-600">Danger Zone</div>
+                        <div class="dangerZone">
+                            <div class="tw-mt-3 column">
+                                <!-- <div>
+                                    Data Source:
+                                    <q-option-group
+                                        :options="dataSourceOptions"
+                                        label="Notifications"
+                                        type="radio"
+                                        v-model="dataSource"
+                                        inline
+                                        @input="promptToChangeDataSource"
+                                    />
+                                    <q-input 
+                                        outlined 
+                                        dense 
+                                        clearable 
+                                        class="tw-ml-3" 
+                                        label="Server Endpoint" 
+                                        v-model="graphqlEndpoint" 
+                                        v-show="dataSource === 'server'" 
+                                        @blur="onEndpointBlur"
+                                    >
+                                    </q-input>
+                                </div> -->
+
+                                <q-btn color="primary" @click="onClickChangeDataSource">Change Data Source</q-btn>
+      
+                            </div>
+
+                            <div class="column">
+                                <q-btn color="primary" class="tw-mt-5" @click="onClickExport">Export Notes</q-btn>
+                            </div>
                             <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
                                 <div class="column">
-                                    <p>Here you can import notes.</p>
-                                    <input type='file' ref="fileInput" id='fileinput'>
+                                    <!-- <input type='file' ref="fileInput" id='fileinput'> -->
+                                    <!-- Add the file input back in using a dialog instead -->
                                     <q-btn color="primary" class="tw-mt-3" @click="onClickImport">Import Notes</q-btn>
                                 </div>
-                                <!-- <input type='button' id='btnLoad' value='Load' onclick='loadFile();'> -->
                             </form>
-                            <div class="tw-mt-10 column">
-                                <p>Clear all notes and tags. This cannot be undone.</p>
-                                <q-btn color="primary" class="" @click="promptToClear">Clear Everything</q-btn>
+                            <div class="tw-mt-5 column">
+                                <q-btn color="red" class="" @click="promptToClear">Clear Everything</q-btn>
                             </div>
                         </div>
+
+                        </q-expansion-item>
 
                     </div>
                 </q-card-section>
             </q-card>
 
             <DeletePrompt :show="showDeleteNotePrompt" :text="deleteNotePromptText" @confirm="onConfirmClear" @cancel="showDeleteNotePrompt = false" />
+            <ChangeDataSourcePrompt 
+                :show="showChangeDataSourcePrompt" 
+                @confirm="onSaveNewDataSource" 
+                @cancel="showChangeDataSourcePrompt = false" 
+                ref="changeDataSourcePrompt"
+            />
 
         </div>
     </q-page>
@@ -39,6 +84,7 @@
 
 <script>
 import DeletePrompt from 'components/DeletePrompt'
+import ChangeDataSourcePrompt from 'components/ChangeDataSourcePrompt'
 import download from 'downloadjs'
 import db from '../db/Database'
 
@@ -48,6 +94,9 @@ export default {
         return {
             showDeleteNotePrompt: false,
             deleteNotePromptText: '',
+
+            showChangeDataSourcePrompt: false,
+            databaseSettings: {},
 
             options: [
                 {
@@ -70,7 +119,18 @@ export default {
         }
     },
     components: {
-        DeletePrompt
+        DeletePrompt,
+        ChangeDataSourcePrompt
+    },
+    mounted () {
+        this.databaseSettings.dataSource = typeof (localStorage.dataSource) === 'undefined' ? 'local' : localStorage.dataSource
+        this.databaseSettings.graphqlEndpoint = typeof (localStorage.endPoint) === 'undefined' ? 'https://' : localStorage.endPoint
+
+        console.log('Settings Mounted')
+        console.log(this.databaseSettings.dataSource)
+        console.log(this.databaseSettings.graphqlEndpoint)
+
+        this.$refs.changeDataSourcePrompt.setDataSourceSettings(this.databaseSettings)
     },
     methods: {
         
@@ -120,6 +180,23 @@ export default {
                     color: 'negative'
                 })
             }
+        },
+
+
+        onClickChangeDataSource () {
+            this.showChangeDataSourcePrompt = true
+        },
+        onSaveNewDataSource (data) {
+            console.log('SaveNewDataSource', data)
+            this.showChangeDataSourcePrompt = false
+
+            localStorage.dataSource = data.dataSource
+            localStorage.endPoint = data.graphqlEndpoint
+
+            this.databaseSettings.dataSource = data.dataSource
+            this.databaseSettings.graphqlEndpoint = data.graphqlEndpoint
+
+            window.location.reload()
         },
     }
 }

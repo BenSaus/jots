@@ -11,7 +11,6 @@ export default {
     data () {
         return {
             noteColors: [
-                'white',
                 'orange',
                 'blue',
                 'purple',

@@ -11,23 +11,25 @@ const SCHEMA_VERSION = config.schemaVersion
 export function startDb () {
     dexie = new Dexie('notesDb')
     dexie.version(SCHEMA_VERSION).stores({
-            notes: '&id, &title, text, color, tags, created, modified, state, created_at, updated_at',
+            notes: '&id, &title, text, color, created, modified, state, created_at, updated_at',
             tags: '&id, &name, color, hotbar, created_at, updated_at',
+            noteTags: '&id, note_id, tag_id'
         }
     )
 }
 startDb()
 
 const db = {
-    notes: NoteDexie,
-    tags: TagDexie,
-    noteTags: NoteTagDexie,
+    notes: NoteDexie(dexie),
+    tags: TagDexie(dexie),
+    noteTags: NoteTagDexie(dexie),
 
     dexie,
     routines: {
         clearDb: async function () {
             await dexie.notes.clear()
             await dexie.tags.clear()
+            await dexie.noteTags.clear()
         },
         exportJSON: async function () {
             const notesArray = await dexie.notes.toArray()

@@ -1,7 +1,19 @@
 import dexie from './Dexie/Dexie'
-import graphQl from './GraphQL/GraphQL'
+import graphql from './GraphQL/GraphQL'
 import config from '../config'
 
-const database = config.mode === 'GraphQL' ? graphQl : dexie
+let database
+
+const setSource = (source) => {
+    if (source === 'graphql') {
+        database = graphql
+    }
+    else if (source === 'local') {
+        database = dexie
+    }
+}
+
+const initialSource = typeof localStorage.dataSource === 'undefined' ? config.mode : localStorage.dataSource
+setSource(initialSource)
 
 export default database

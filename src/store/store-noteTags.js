@@ -35,6 +35,9 @@ const actions = {
             tag_id: tagId,
         }
 
+        console.log('Creating Note Tag:')
+        console.log(newNoteTag)
+        
         newNoteTag = await db.noteTags.createNoteTag(newNoteTag)
 
         context.commit('createNoteTag', newNoteTag)

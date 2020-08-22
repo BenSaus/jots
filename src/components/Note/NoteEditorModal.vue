@@ -7,7 +7,7 @@
                         <ModalNoteTitle :title="note.title" @onChange="onTitleChange" ref="modalNoteTitle" />
                     </ModalHeader>
 
-                    <div class="tw-mt-3 tw-mb-20">
+                    <div class="tw-mb-20">
                         <ModalNoteText :text="note.text" @onChange="onTextChange" :showMarkdown="showMarkdown" />
                         <ModalNoteTags :tags="tags" @change="onTagsChange" />
                     </div>

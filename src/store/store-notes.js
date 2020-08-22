@@ -35,10 +35,11 @@ const mutations = {
 
 const actions = {
     async fetchNotes (context) {
+        console.log('Fetch Notes')
         console.log(db)
         
         const notes = await db.notes.getNotes()
-
+        
         console.log('fetchNotes', notes)
         context.commit('setNotes', notes)
     },
@@ -77,7 +78,6 @@ const getters = {
     },
     isValid: (state) => (note) => {
         // check for duplicate titles here...
-
     }
 }
 

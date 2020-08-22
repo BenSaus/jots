@@ -21,9 +21,7 @@
         type="text" 
         bg-color="white"
         dense
-        borderless
-        filled
-        hide-bottom-space
+        outlined 
         :rules="[val => !!val || 'Title is required']"
         @input="$emit('onChange', $event)"
     ></q-input>
