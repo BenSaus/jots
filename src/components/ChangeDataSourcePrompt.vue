@@ -11,7 +11,6 @@
                             type="radio"
                             v-model="dataSource"
                             inline
-                            
                         />
                     </div>
                     <div class="tw-w-full">
@@ -23,7 +22,6 @@
                             label="Server Endpoint" 
                             v-model="graphqlEndpoint" 
                             v-show="dataSource === 'graphql'" 
-                            
                         >
                         </q-input>
                     </div>

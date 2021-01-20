@@ -25,7 +25,8 @@
     "tiptap-extensions": "^1.29.1",
     "uuid": "^8.1.0",
     "vue-markdown": "^2.2.4",
-    "vue-waterfall": "^1.0.6"
+    "vue-waterfall": "^1.0.6",
+    "vuedraggable": "^2.24.1"
   },
   "devDependencies": {
     "@quasar/app": "^1.8.10",
