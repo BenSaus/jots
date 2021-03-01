@@ -1,3 +1,3 @@
 # Jots App (jots)
 
-A Quasar/Vue Google Keep Clone
+A Quasar/Vue application to keep notes
